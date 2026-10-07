@@ -1,0 +1,98 @@
+export const workflows = {
+  "web-development": {
+    eyebrow: "HOW WE WORK",
+    heading: "A clear path from brief to launch.",
+    subheading: "Five stages, with you involved at every one.",
+    steps: [
+      { title: "Discover", description: "We learn your goals, audience, and constraints, then agree on scope and success measures." },
+      { title: "Design", description: "Wireframes and visual design reviewed with you before any code is written." },
+      { title: "Build", description: "Iterative development with working previews you can click through along the way." },
+      { title: "Launch", description: "Testing, performance checks, and a smooth go-live with redirects and analytics in place." },
+      { title: "Support", description: "Monitoring, fixes, and improvements after launch so the site keeps earning its keep." },
+    ],
+  },
+  "full-stack-development": {
+    eyebrow: "HOW WE WORK",
+    heading: "Architecture first, then steady delivery.",
+    subheading: "We plan the whole system before building any single part.",
+    steps: [
+      { title: "Scope", description: "Requirements, users, and technical constraints captured and prioritized." },
+      { title: "Architect", description: "Data model, API contracts, and infrastructure planned together." },
+      { title: "Build", description: "Frontend and backend developed in short sprints with regular demos." },
+      { title: "Harden", description: "Automated tests, security review, and load checks before release." },
+      { title: "Hand over", description: "Deployment, documentation, and training so your team can own it." },
+    ],
+  },
+  "ai-llm-solutions": {
+    eyebrow: "HOW WE WORK",
+    heading: "Prove it works before we ship it.",
+    subheading: "Every AI feature is tested against real examples first.",
+    steps: [
+      { title: "Find the use case", description: "We pick problems where AI genuinely helps and define what a good answer looks like." },
+      { title: "Prototype", description: "A quick working version on your real data to test feasibility cheaply." },
+      { title: "Evaluate", description: "Test suites that measure accuracy, tone, and failure cases objectively." },
+      { title: "Integrate", description: "Production wiring with guardrails, fallbacks, and usage limits." },
+      { title: "Monitor", description: "Ongoing quality, cost, and latency tracking, with tuning as usage grows." },
+    ],
+  },
+  "saas-product-development": {
+    eyebrow: "HOW WE WORK",
+    heading: "Build the smallest thing that proves the idea.",
+    subheading: "Fast learning cycles, then deliberate scaling.",
+    steps: [
+      { title: "Validate", description: "Test the problem and the audience before committing engineering time." },
+      { title: "Define the MVP", description: "Cut the feature list down to what a first customer actually needs." },
+      { title: "Build", description: "Ship in short cycles with a foundation that won't need rewriting at launch." },
+      { title: "Launch", description: "Onboarding, billing, and support flows ready for your first paying users." },
+      { title: "Scale", description: "Use real usage data to decide what to improve, add, or remove." },
+    ],
+  },
+  "e-commerce-development": {
+    eyebrow: "HOW WE WORK",
+    heading: "From catalog to first order, planned end to end.",
+    subheading: "We build around the shopper's path to checkout.",
+    steps: [
+      { title: "Plan the store", description: "Catalog structure, platform choice, and integrations mapped out up front." },
+      { title: "Design", description: "Storefront and product page designs focused on clarity and trust." },
+      { title: "Build & integrate", description: "Storefront, admin tools, and payment, shipping, and stock connections." },
+      { title: "Test checkout", description: "Every payment path, edge case, and device tested before real customers arrive." },
+      { title: "Launch & optimize", description: "Go live, watch the funnel, and improve what the data points to." },
+    ],
+  },
+  "ui-ux-design-systems": {
+    eyebrow: "HOW WE WORK",
+    heading: "Research-led, then systematic.",
+    subheading: "Decisions backed by users, outputs ready for developers.",
+    steps: [
+      { title: "Research", description: "Interviews, audits, and analytics to understand how people use your product today." },
+      { title: "Define", description: "Problems, personas, and flows agreed before any pixels are pushed." },
+      { title: "Design", description: "Interface concepts tested through interactive prototypes." },
+      { title: "Systemize", description: "Tokens, components, and rules that make the design repeatable." },
+      { title: "Hand off", description: "Specs, documentation, and design support while engineers build." },
+    ],
+  },
+  "cloud-devops": {
+    eyebrow: "HOW WE WORK",
+    heading: "Assess, automate, then watch closely.",
+    subheading: "Changes made safely and measured afterwards.",
+    steps: [
+      { title: "Assess", description: "Review current infrastructure, deployments, costs, and risks." },
+      { title: "Architect", description: "Target environment designed for reliability, security, and budget." },
+      { title: "Automate", description: "Pipelines and infrastructure as code replace manual steps." },
+      { title: "Deploy", description: "Staged rollouts with rollback plans so changes carry little risk." },
+      { title: "Observe", description: "Dashboards and alerts, plus regular reviews to trim cost and noise." },
+    ],
+  },
+  "api-integrations": {
+    eyebrow: "HOW WE WORK",
+    heading: "Contract first, code second.",
+    subheading: "Agree on the interface before building behind it.",
+    steps: [
+      { title: "Map requirements", description: "Systems, data flows, and consumers identified and documented." },
+      { title: "Design the contract", description: "Endpoints, schemas, and error formats agreed and reviewed." },
+      { title: "Build & secure", description: "Implementation with authentication, validation, and rate limiting." },
+      { title: "Test & document", description: "Automated tests and interactive docs for integrators." },
+      { title: "Release & monitor", description: "Versioned rollout with logging, alerts, and usage tracking." },
+    ],
+  },
+};

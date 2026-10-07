@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --color-navy: #0b1e3d;
+  --color-ink: #101820;
+  --color-slate: #5b6b82;
+  --color-teal: #17a6a0;
+  --color-paper: #fafaf9;
+}
+
+@theme inline {
+  --color-navy: var(--color-navy);
+  --color-ink: var(--color-ink);
+  --color-slate: var(--color-slate);
+  --color-teal: var(--color-teal);
+  --color-paper: var(--color-paper);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body), sans-serif;
+}
