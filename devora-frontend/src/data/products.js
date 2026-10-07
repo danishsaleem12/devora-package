@@ -1,6 +1,13 @@
 const PRIMARY_CTA = { label: "Request a demo", href: "/contact" };
 const SECONDARY_CTA = { label: "View all products", href: "/products" };
 const PARENT = { label: "Products", href: "/products" };
+import { productFeatures } from "./productFeatures";
+import { productWorkflows } from "./productWorkflow";
+import { productUseCases } from "./productUseCases";
+import { productWhy } from "./productWhy";
+import { productTech } from "./productTech";
+import { productFaqs } from "./productFaq";
+import { productCtas } from "./productCta";
 
 export const products = [
   {
@@ -137,6 +144,14 @@ export function getAllProducts() {
 export function getProduct(slug) {
   const product = products.find((p) => p.slug === slug);
   if (!product) return null;
-  // Section data (features, getting started, etc.) gets merged in here as we add it
-  return { ...product };
+  return {
+    ...product,
+    offerings: productFeatures[slug] ?? null,
+    workflow: productWorkflows[slug] ?? null,
+    useCases: productUseCases[slug] ?? null,
+    why: productWhy[slug] ?? null,
+    techStack: productTech[slug] ?? null,
+    faq: productFaqs[slug] ?? null,
+    cta: productCtas[slug] ?? null,
+  };
 }

@@ -75,9 +75,26 @@ const FALLBACK_MENUS = [
 ];
 
 const SOCIALS = [
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "X", href: "https://x.com" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/m-danish-489a8b259",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/danishsaleem12",
+  },
+  {
+    label: "WhatsApp",
+    href:
+      "https://wa.me/923186039286?text=" +
+      encodeURIComponent("Hi! I found you through the Devora website and I'd like to talk about a project."),
+  },
+  {
+    label: "Email",
+    href:
+      "mailto:mdanishsaleem52@gmail.com?subject=" +
+      encodeURIComponent("Project enquiry from the Devora website"),
+  },
 ];
 
 function ChevronIcon({ open }) {
@@ -227,18 +244,20 @@ export default function Footer() {
             <div>
               <p className="mb-1 font-medium text-white/70">Follow along</p>
               <ul className="flex flex-col gap-1">
-                {SOCIALS.map((s) => (
-                  <li key={s.label}>
-                    <a
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-[#D9A85C]"
-                    >
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
+                {SOCIALS.map((s) => {
+                  const isWeb = s.href.startsWith("http");
+                  return (
+                    <li key={s.label}>
+                      <a
+                        href={s.href}
+                        {...(isWeb ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        className="transition-colors hover:text-[#D9A85C]"
+                      >
+                        {s.label}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>

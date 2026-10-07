@@ -1,0 +1,67 @@
+export const productFeatures = {
+  "devora-analytics": {
+    eyebrow: "KEY FEATURES",
+    heading: "All your numbers, one clear picture.",
+    subheading: "Connect your data once and get answers without waiting on a report.",
+    items: [
+      { icon: "chart", title: "Live Dashboards", description: "Metrics that update as your business does, organized the way your team thinks." },
+      { icon: "plug", title: "Data Source Connections", description: "Bring sales, marketing, and operations data together in one place." },
+      { icon: "gauge", title: "Alerts When Metrics Shift", description: "Get notified when a number moves outside the range you care about." },
+      { icon: "bot", title: "Plain-Language Questions", description: "Ask a question in everyday words and get an answer, no query writing needed." },
+      { icon: "doc", title: "Exports & Reports", description: "Share results with your team or stakeholders in the format they need." },
+      { icon: "code", title: "API Access", description: "Pull your analytics into your own tools and workflows." },
+    ],
+  },
+  "devora-assist": {
+    eyebrow: "KEY FEATURES",
+    heading: "A chat assistant that knows your business.",
+    subheading: "Answers grounded in your own content, with your team ready when it matters.",
+    items: [
+      { icon: "layout", title: "Branded Chat Widget", description: "A widget that matches your site's look and feel." },
+      { icon: "search", title: "Answers From Your Content", description: "Responses drawn from your help center and documents, not guesswork." },
+      { icon: "bot", title: "Human Handoff", description: "Conversations pass to your team when a person is needed." },
+      { icon: "refresh", title: "Content Sync", description: "Keep the assistant up to date as your content changes." },
+      { icon: "chart", title: "Conversation Analytics", description: "See what customers ask about and where answers fall short." },
+      { icon: "plug", title: "Simple Installation", description: "Add the widget to your website without rebuilding it." },
+    ],
+  },
+  "devora-commerce-kit": {
+    eyebrow: "KEY FEATURES",
+    heading: "A store foundation, ready for your brand.",
+    subheading: "Skip the groundwork and spend your time on products and customers.",
+    items: [
+      { icon: "cart", title: "Ready-Made Storefront", description: "Product pages, listings, and navigation ready to customize." },
+      { icon: "layers", title: "Cart & Checkout", description: "A smooth path from browsing to purchase." },
+      { icon: "card", title: "Payments", description: "Payment support built into the checkout flow." },
+      { icon: "chart", title: "Admin Panel", description: "Manage products, prices, and orders without developer help." },
+      { icon: "palette", title: "Brand Customization", description: "Colors, typography, and layout tailored to your brand." },
+      { icon: "rocket", title: "Launch Support", description: "Help configuring and going live with your store." },
+    ],
+  },
+  "devora-hrm": {
+    eyebrow: "KEY FEATURES",
+    heading: "HR work in one place, not twelve spreadsheets.",
+    subheading: "Everyday people management, simplified for HR and managers alike.",
+    items: [
+      { icon: "database", title: "Employee Records", description: "One reliable source of truth for every team member." },
+      { icon: "doc", title: "Leave Management", description: "Requests, balances, and approvals without the back-and-forth." },
+      { icon: "gauge", title: "Attendance Tracking", description: "Clear attendance records your team can trust." },
+      { icon: "shield", title: "Simple Approvals", description: "Managers review and approve in a few clicks." },
+      { icon: "card", title: "Payroll Inputs", description: "Attendance and leave data organized and ready for payroll." },
+      { icon: "chart", title: "Reports", description: "Clear reports for HR and managers." },
+    ],
+  },
+  "devora-pos": {
+    eyebrow: "KEY FEATURES",
+    heading: "Built for the speed of a busy counter.",
+    subheading: "Everything a shop or restaurant needs to sell, track, and close the day.",
+    items: [
+      { icon: "gauge", title: "Fast Checkout", description: "Ring up sales quickly, even when the line is long." },
+      { icon: "layers", title: "Live Stock Counts", description: "Inventory updates as items sell, so you always know what's left." },
+      { icon: "doc", title: "Receipts", description: "Clear receipts for every sale." },
+      { icon: "chart", title: "Daily Reports", description: "End-of-day totals without manual counting." },
+      { icon: "cart", title: "Product & Price Management", description: "Update items and prices when your menu or catalog changes." },
+      { icon: "wrench", title: "Setup & Support", description: "Help getting your counter configured and running." },
+    ],
+  },
+};
