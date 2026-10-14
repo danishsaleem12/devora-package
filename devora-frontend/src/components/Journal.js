@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
   return (
@@ -14,11 +15,12 @@ function ArrowIcon({ size = 12 }) {
 }
 
 function FeaturedArticle({ featured }) {
+  const { t } = useLanguage();
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.a
-      href="#"
+      href={featured.href || "/resources/journal"}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial={{ opacity: 0, y: 20 }}
@@ -41,7 +43,7 @@ function FeaturedArticle({ featured }) {
             {featured.category}
           </span>
           <div>
-            <p className="text-[11px] uppercase tracking-widest text-slate/60">Featured essay</p>
+            <p className="text-[11px] uppercase tracking-widest text-slate/60">{t("Featured essay")}</p>
             <h3 className="mt-2 text-xl font-bold leading-snug text-white sm:text-2xl">
               {featured.title}
             </h3>
@@ -71,7 +73,7 @@ function FeaturedArticle({ featured }) {
 function ArticleRow({ article, index }) {
   return (
     <motion.a
-      href="#"
+      href={article.href || "/resources/journal"}
       initial={{ opacity: 0, x: 12 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.4 }}
@@ -96,9 +98,10 @@ export default function Journal() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
+  const { t, te } = useLanguage();
 
   useEffect(() => {
-    fetch(`${API_URL}/api/journal`)
+    apiFetch("journal")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -111,7 +114,7 @@ export default function Journal() {
     return (
       <section className="bg-white px-6 py-16">
         <p className="mx-auto max-w-6xl text-sm text-red-500">
-          Could not load journal: {error}. Is the backend running on {API_URL}?
+          {te("Could not load journal. Please try again in a moment.", error)}
         </p>
       </section>
     );
@@ -167,7 +170,7 @@ export default function Journal() {
                         : "border-black/10 text-slate hover:border-black/20 hover:text-ink"
                     }`}
                   >
-                    {cat}
+                    {cat === "All" ? t("All") : cat}
                   </button>
                 );
               })}

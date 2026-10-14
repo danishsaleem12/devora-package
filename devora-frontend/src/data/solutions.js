@@ -4,6 +4,7 @@ const PARENT = { label: "Solutions", href: "/solutions" };
 import { problems } from "./solutionProblems";
 import { solutionOfferings } from "./solutionOfferings";
 import { solutionWorkflows } from "./solutionWorkflow";
+import { solutionUseCases } from "./solutionUseCases";
 import { solutionTech } from "./solutionTech";
 import { solutionWhy } from "./solutionWhy";
 import { solutionFaq } from "./solutionFaq";
@@ -120,6 +121,7 @@ export function getSolution(slug) {
     problem: problems[slug] ?? null,
     offerings: solutionOfferings[slug] ?? null,
     workflow: solutionWorkflows[slug] ?? null,
+    useCases: solutionUseCases[slug] ?? null,
     techStack: solutionTech[slug] ?? null,
     why: solutionWhy[slug] ?? null,
     faq: solutionFaq[slug] ?? null,

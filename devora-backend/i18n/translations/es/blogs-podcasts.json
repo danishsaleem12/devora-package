@@ -1,0 +1,12 @@
+{
+  "An AI feature is never free. Here is how to count what it really costs before you build it.": "Una función de IA nunca es gratis. Así se calcula lo que realmente cuesta antes de construirla.",
+  "Engineers keep a backlog of tech debt. Almost nobody keeps one for inconsistent, confusing, or outdated design.": "Los ingenieros llevan un backlog de deuda técnica. Casi nadie lleva uno para el diseño inconsistente, confuso u obsoleto.",
+  "A fixed price only works if the scope is honest. This is how we make it honest before anyone signs.": "Un precio fijo solo funciona si el alcance es honesto. Así lo hacemos honesto antes de que alguien firme.",
+  "Stopping all new work for a migration is rarely an option. Here is how we kept shipping while the foundation changed.": "Detener todo el trabajo nuevo por una migración rara vez es una opción. Así seguimos entregando mientras cambiaba la base.",
+  "'Fit' quietly selects for people who are just like us. We replaced it with something more useful.": "El «encaje cultural» selecciona sin darnos cuenta a personas iguales a nosotros. Lo reemplazamos por algo más útil.",
+  "Prompts that grow by accident become the new unmaintainable legacy code. Structure them on purpose.": "Los prompts que crecen por accidente se convierten en el nuevo código heredado imposible de mantener. Estructúralos a propósito.",
+  "Layla walks through how Fieldnote reached its first million in annual revenue using only customer conversations, a niche community, and patience.": "Layla cuenta cómo Fieldnote alcanzó su primer millón de ingresos anuales usando solo conversaciones con clientes, una comunidad de nicho y paciencia.",
+  "Marcus has shipped and killed more AI features than he can count. He shares how to tell a useful one from an expensive demo.": "Marcus ha lanzado y descartado más funciones de IA de las que puede contar. Explica cómo distinguir una útil de una demo costosa.",
+  "Priya runs a marketplace with tens of thousands of users on her own. She explains what she automated, what she refuses to, and where she asks for help.": "Priya gestiona sola un marketplace con decenas de miles de usuarios. Explica qué automatizó, qué se niega a automatizar y dónde pide ayuda.",
+  "Tomas inherited ten years of undocumented code that moved real freight every day. This is how his team made it safe to change.": "Tomas heredó diez años de código sin documentar que movía carga real todos los días. Así hizo su equipo que fuera seguro modificarlo."
+}

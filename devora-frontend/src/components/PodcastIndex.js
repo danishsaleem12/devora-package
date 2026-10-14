@@ -1,9 +1,11 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useSubscribe } from "@/lib/useSubscribe";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const PAGE_SIZE = 6;
 
 /* ---------------- Icons ---------------- */
@@ -96,6 +98,7 @@ function Waveform({ seed = [], playing, compact = false }) {
 /* ---------------- Featured episode player ---------------- */
 
 function FeaturedEpisode({ episode }) {
+    const { t } = useLanguage();
     const [playing, setPlaying] = useState(false);
     if (!episode) return null;
 
@@ -120,7 +123,7 @@ function FeaturedEpisode({ episode }) {
                 </div>
                 <div className="flex flex-col justify-center p-6 text-white sm:p-8 lg:p-10">
                     <span className="text-[11px] font-medium uppercase tracking-widest text-teal">
-                        Latest episode
+                        {t("Latest episode")}
                     </span>
                     <h2 className="mt-3 font-heading text-2xl font-bold leading-snug sm:text-3xl">
                         {episode.title}
@@ -130,7 +133,7 @@ function FeaturedEpisode({ episode }) {
                     <div className="mt-6 flex items-center gap-4">
                         <button
                             onClick={() => setPlaying((p) => !p)}
-                            aria-label={playing ? "Pause" : "Play"}
+                            aria-label={playing ? t("Pause") : t("Play")}
                             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal text-navy transition-transform hover:scale-105"
                         >
                             {playing ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
@@ -142,7 +145,7 @@ function FeaturedEpisode({ episode }) {
                     </div>
 
                     <a href={episode.href || "#"} className="mt-6 flex items-center gap-1.5 text-sm font-medium text-teal">
-                        View episode details <ArrowIcon />
+                        {t("View episode details")} <ArrowIcon />
                     </a>
                 </div>
             </div>
@@ -153,6 +156,7 @@ function FeaturedEpisode({ episode }) {
 /* ---------------- Episode card ---------------- */
 
 function EpisodeCard({ episode }) {
+    const { t } = useLanguage();
     const [playing, setPlaying] = useState(false);
 
     return (
@@ -187,7 +191,7 @@ function EpisodeCard({ episode }) {
                 <div className="mt-4 flex items-center gap-3 border-t border-white/10 pt-4">
                     <button
                         onClick={() => setPlaying((p) => !p)}
-                        aria-label={playing ? "Pause" : "Play"}
+                        aria-label={playing ? t("Pause") : t("Play")}
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal/10 text-teal transition-colors hover:bg-teal hover:text-navy"
                     >
                         {playing ? <PauseIcon size={11} /> : <PlayIcon size={11} />}
@@ -205,26 +209,20 @@ function EpisodeCard({ episode }) {
 /* ---------------- Newsletter CTA ---------------- */
 
 function NewsletterCta() {
-    const [email, setEmail] = useState("");
-    const [submitted, setSubmitted] = useState(false);
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (!email) return;
-        setSubmitted(true);
-    }
+    const { t } = useLanguage();
+    const { email, setEmail, submitted, sending, error, handleSubmit } = useSubscribe("newsletter-podcast");
 
     return (
         <div className="rounded-2xl bg-navy p-8 text-white sm:p-10">
-            <p className="font-mono text-xs tracking-widest text-teal/80">DEVORA UNSCRIPTED</p>
+            <p className="font-mono text-xs tracking-widest text-teal/80">{t("DEVORA UNSCRIPTED")}</p>
             <h3 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
-                New episodes, straight to your inbox.
+                {t("New episodes, straight to your inbox.")}
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-slate">
-                No spam — just an email whenever we publish something worth fifteen minutes.
+                {t("No spam — just an email whenever we publish something worth fifteen minutes.")}
             </p>
             {submitted ? (
-                <p className="mt-6 text-sm text-teal">You&apos;re on the list.</p>
+                <p className="mt-6 text-sm text-teal">{t("You're on the list.")}</p>
             ) : (
                 <form onSubmit={handleSubmit} className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row">
                     <input
@@ -239,13 +237,15 @@ function NewsletterCta() {
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                         type="submit"
-                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
+                        disabled={sending}
+                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Subscribe
+                        {sending ? t("Subscribing…") : t("Subscribe")}
                         <ArrowIcon />
                     </motion.button>
                 </form>
             )}
+            {error && <p role="alert" className="mt-3 text-sm text-red-300">{t(error)}</p>}
         </div>
     );
 }
@@ -256,18 +256,19 @@ export default function PodcastIndex() {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [activeCategory, setActiveCategory] = useState("All");
+    const { t, te } = useLanguage();
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/podcasts`)
+        apiFetch("podcast-index")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load podcast episodes: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load podcast episodes. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -385,7 +386,7 @@ export default function PodcastIndex() {
                                         : "bg-white/5 text-slate hover:bg-white/10"
                                 }`}
                             >
-                                {cat}
+                                {cat === "All" ? t("All") : cat}
                             </button>
                         ))}
                     </div>
@@ -403,7 +404,7 @@ export default function PodcastIndex() {
                     </motion.div>
 
                     {visibleEpisodes.length === 0 && (
-                        <p className="mt-10 text-center text-sm text-slate">No episodes in this category yet.</p>
+                        <p className="mt-10 text-center text-sm text-slate">{t("No episodes in this category yet.")}</p>
                     )}
 
                     {hasMore && (
@@ -414,7 +415,7 @@ export default function PodcastIndex() {
                                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                                 className="rounded-md border border-white/15 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-teal hover:text-teal"
                             >
-                                Load more episodes
+                                {t("Load more episodes")}
                             </motion.button>
                         </div>
                     )}

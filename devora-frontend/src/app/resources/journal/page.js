@@ -1,11 +1,10 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import JournalArticle from "@/components/JournalArticle";
+import JournalIndex from "@/components/JournalIndex";
 
 export const metadata = {
-    title: "Why We Build Slow Foundations for Fast-Moving Startups | Devora Journal",
-    description:
-        "Our founder on why the fastest teams are the ones who refuse to cut corners on the boring parts.",
+    title: "Journal | Devora",
+    description: "Essays, breakdowns, and things we learned the hard way.",
 };
 
 export default function JournalPage() {
@@ -13,7 +12,7 @@ export default function JournalPage() {
         <>
             <Navbar />
             <main>
-                <JournalArticle />
+                <JournalIndex />
             </main>
             <Footer />
         </>

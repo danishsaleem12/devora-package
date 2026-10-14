@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLocalized } from "@/components/LanguageProvider";
 
 const ICONS = {
     layout: (p) => (
@@ -140,7 +141,9 @@ function OfferingCard({ item, index }) {
     );
 }
 
-export default function ServiceOfferings({ service }) {
+export default function ServiceOfferings({ service: rawService }) {
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.offerings;
     if (!data?.items?.length) return null;
 

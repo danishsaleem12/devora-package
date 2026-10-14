@@ -1,0 +1,17 @@
+{
+  "Admin Login": "Acceso de administrador",
+  "Sign in to manage job postings.": "Inicia sesión para gestionar las ofertas de empleo.",
+  "Username": "Nombre de usuario",
+  "Password": "Contraseña",
+  "Sign in": "Iniciar sesión",
+  "Signing in…": "Iniciando sesión…",
+  "Login failed": "Error al iniciar sesión",
+  "Invalid username or password": "Nombre de usuario o contraseña no válidos",
+  "Missing or invalid token": "Token ausente o no válido",
+  "Invalid or expired token": "Token no válido o caducado",
+  "Invalid job id": "ID de oferta no válido",
+  "Job not found": "Oferta no encontrada",
+  "Could not load jobs": "No se pudieron cargar las ofertas",
+  "Could not load job": "No se pudo cargar la oferta",
+  "Could not delete job": "No se pudo eliminar la oferta"
+}

@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const ICONS = {
   heart: (props) => (
@@ -73,11 +74,12 @@ function ValueCard({ item, index }) {
 }
 
 export default function Values() {
+  const { te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/values`)
+    apiFetch("values")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -90,7 +92,7 @@ export default function Values() {
     return (
       <section className="bg-white px-6 py-12">
         <p className="mx-auto max-w-6xl text-sm text-slate">
-          Could not load this section: {error}. Is the backend running on {API_URL}?
+          {te("Could not load this section. Please try again in a moment.", error)}
         </p>
       </section>
     );

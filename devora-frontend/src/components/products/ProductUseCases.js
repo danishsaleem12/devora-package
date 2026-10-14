@@ -1,8 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 
-export default function ProductUseCases({ product }) {
+export default function ProductUseCases({ product: rawProduct }) {
+  const { t } = useLanguage();
+  // text is translated from the language catalog (falls back to English)
+  const product = useLocalized(rawProduct);
     const data = product.useCases;
     if (!data?.items?.length) return null;
 
@@ -51,11 +55,11 @@ export default function ProductUseCases({ product }) {
 
                                 <div className="mt-5 space-y-4">
                                     <div>
-                                        <p className="font-mono text-[10px] tracking-widest text-slate/70">THE CHALLENGE</p>
+                                        <p className="font-mono text-[10px] tracking-widest text-slate/70">{t("THE CHALLENGE")}</p>
                                         <p className="mt-1.5 text-sm leading-relaxed text-slate">{item.challenge}</p>
                                     </div>
                                     <div className="border-t border-black/5 pt-4">
-                                        <p className="font-mono text-[10px] tracking-widest text-teal">WITH DEVORA</p>
+                                        <p className="font-mono text-[10px] tracking-widest text-teal">{t("WITH DEVORA")}</p>
                                         <p className="mt-1.5 text-sm font-medium leading-relaxed text-ink">{item.outcome}</p>
                                     </div>
                                 </div>

@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const SPOTLIGHT_DURATION_MS = 6000;
 
 const TONES = {
@@ -55,7 +56,8 @@ function EpisodeCard({ episode, index }) {
   const tone = TONES[episode.tone] || TONES.teal;
 
   return (
-    <motion.div
+    <motion.a
+      href={episode.href || "/resources/podcasts"}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -102,17 +104,18 @@ function EpisodeCard({ episode, index }) {
         </p>
         <p className="mt-1 text-[11px] text-slate/50">{episode.duration}</p>
       </div>
-    </motion.div>
+    </motion.a>
   );
 }
 
 export default function Podcasts() {
+  const { t, te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/podcasts`)
+    apiFetch("podcasts")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -133,7 +136,7 @@ export default function Podcasts() {
     return (
       <section className="bg-white p-2 sm:p-3 lg:p-4">
         <p className="text-sm text-red-500">
-          Could not load podcasts: {error}. Is the backend running on {API_URL}?
+          {te("Could not load podcasts. Please try again in a moment.", error)}
         </p>
       </section>
     );
@@ -222,7 +225,7 @@ export default function Podcasts() {
                 <button
                   key={ep.id}
                   onClick={() => setSpotlightIndex(i)}
-                  aria-label={`Show episode ${i + 1}`}
+                  aria-label={t("Show episode {n}").replace("{n}", i + 1)}
                   className={`h-1 flex-1 overflow-hidden rounded-full bg-white/10`}
                 >
                   {i === spotlightIndex && (

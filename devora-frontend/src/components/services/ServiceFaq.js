@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 import { AnimatePresence, motion } from "framer-motion";
 
 function ArrowIcon() {
@@ -60,7 +61,10 @@ function FaqItem({ item, index, isOpen, onToggle }) {
     );
 }
 
-export default function ServiceFaq({ service }) {
+export default function ServiceFaq({ service: rawService }) {
+  const { t } = useLanguage();
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.faq;
     const [openIndex, setOpenIndex] = useState(0);
 
@@ -108,8 +112,8 @@ export default function ServiceFaq({ service }) {
                         <p className="mt-4 max-w-sm text-base leading-relaxed text-slate">{data.subheading}</p>
 
                         <div className="mt-8 rounded-2xl border border-black/5 bg-white p-5 shadow-sm">
-                            <p className="text-sm font-semibold text-ink">Still have a question?</p>
-                            <p className="mt-1 text-sm text-slate">We reply to every message.</p>
+                            <p className="text-sm font-semibold text-ink">{t("Still have a question?")}</p>
+                            <p className="mt-1 text-sm text-slate">{t("We reply to every message.")}</p>
                             <motion.a
                                 whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.97 }}
@@ -117,7 +121,7 @@ export default function ServiceFaq({ service }) {
                                 className="mt-4 flex w-fit items-center gap-1.5 rounded-md bg-teal px-4 py-2.5 text-sm font-medium text-navy"
                             >
                                 <ArrowIcon />
-                                Ask us directly
+                                {t("Ask us directly")}
                             </motion.a>
                         </div>
                     </motion.div>

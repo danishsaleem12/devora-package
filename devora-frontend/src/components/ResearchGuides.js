@@ -1,9 +1,11 @@
 "use client";
 
+import { API_URL, apiFetch } from "@/lib/api";
+import { postJson, useSubscribe } from "@/lib/useSubscribe";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const PAGE_SIZE = 6;
 
 /* ---------------- Icons ---------------- */
@@ -50,13 +52,27 @@ const rise = {
 /* ---------------- Email-gate modal ---------------- */
 
 function EmailGateModal({ guide, onClose }) {
+    const { t } = useLanguage();
     const [email, setEmail] = useState("");
-    const [unlocked, setUnlocked] = useState(false);
+    const [downloadUrl, setDownloadUrl] = useState("");
+    const [sending, setSending] = useState(false);
+    const [error, setError] = useState("");
+    const unlocked = Boolean(downloadUrl);
 
-    function handleSubmit(e) {
+    // The backend saves the email and answers with a short-lived download link
+    async function handleSubmit(e) {
         e.preventDefault();
-        if (!email) return;
-        setUnlocked(true);
+        if (!email || sending) return;
+        setSending(true);
+        setError("");
+        try {
+            const data = await postJson(`guides/${guide.id}/unlock`, { email });
+            setDownloadUrl(`${API_URL}${data.downloadUrl}`);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setSending(false);
+        }
     }
 
     if (!guide) return null;
@@ -72,7 +88,7 @@ function EmailGateModal({ guide, onClose }) {
             >
                 <button
                     onClick={onClose}
-                    aria-label="Close"
+                    aria-label={t("Close")}
                     className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-black/5 hover:text-ink"
                 >
                     <CloseIcon />
@@ -85,21 +101,21 @@ function EmailGateModal({ guide, onClose }) {
 
                 {unlocked ? (
                     <div className="mt-5">
-                        <p className="text-sm text-slate">You&apos;re in — your download is ready.</p>
+                        <p className="text-sm text-slate">{t("You're in — your download is ready.")}</p>
                         <motion.a
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
-                            href={guide.href || "#"}
+                            href={downloadUrl}
                             className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
                         >
                             <DownloadIcon />
-                            Download {guide.format || "PDF"}
+                            {t("Download")} {guide.format || "PDF"}
                         </motion.a>
                     </div>
                 ) : (
                     <>
                         <p className="mt-2 text-sm leading-relaxed text-slate">
-                            Enter your email and we&apos;ll unlock the download — no spam, just this.
+                            {t("Enter your email and we'll unlock the download — no spam, just this.")}
                         </p>
                         <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
                             <input
@@ -115,12 +131,14 @@ function EmailGateModal({ guide, onClose }) {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
-                                className="flex items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
+                                disabled={sending}
+                                className="flex items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                Get the guide
+                                {sending ? t("Sending…") : t("Get the guide")}
                                 <ArrowIcon />
                             </motion.button>
                         </form>
+                        {error && <p role="alert" className="mt-3 text-sm text-red-600">{t(error)}</p>}
                     </>
                 )}
             </motion.div>
@@ -131,6 +149,7 @@ function EmailGateModal({ guide, onClose }) {
 /* ---------------- Featured guide ---------------- */
 
 function FeaturedGuide({ guide, onDownload }) {
+    const { t } = useLanguage();
     if (!guide) return null;
     return (
         <motion.div
@@ -150,14 +169,14 @@ function FeaturedGuide({ guide, onDownload }) {
                 )}
             </div>
             <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-                <span className="text-[11px] font-medium uppercase tracking-widest text-teal">Featured guide</span>
+                <span className="text-[11px] font-medium uppercase tracking-widest text-teal">{t("Featured guide")}</span>
                 <h2 className="mt-3 font-heading text-2xl font-bold leading-snug text-ink sm:text-3xl">
                     {guide.title}
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">{guide.description}</p>
                 <div className="mt-5 flex items-center gap-2 text-xs text-slate/60">
                     <DocIcon />
-                    <span>{guide.pages ? `${guide.pages} pages` : guide.format}</span>
+                    <span>{guide.pages ? `${guide.pages} ${t("pages")}` : guide.format}</span>
                     <span className="h-1 w-1 rounded-full bg-slate/40" />
                     <span>{guide.format || "PDF"}</span>
                 </div>
@@ -168,7 +187,7 @@ function FeaturedGuide({ guide, onDownload }) {
                     className="mt-6 flex w-fit items-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
                 >
                     <DownloadIcon />
-                    Download free
+                    {t("Download free")}
                 </motion.button>
             </div>
         </motion.div>
@@ -178,6 +197,7 @@ function FeaturedGuide({ guide, onDownload }) {
 /* ---------------- Guide card ---------------- */
 
 function GuideCard({ guide, onDownload }) {
+    const { t } = useLanguage();
     return (
         <motion.div
             variants={rise}
@@ -204,14 +224,14 @@ function GuideCard({ guide, onDownload }) {
                 <div className="mt-4 flex items-center justify-between border-t border-black/5 pt-4">
                     <span className="flex items-center gap-1.5 text-xs text-slate/60">
                         <DocIcon />
-                        {guide.pages ? `${guide.pages} pages` : guide.format || "PDF"}
+                        {guide.pages ? `${guide.pages} ${t("pages")}` : guide.format || "PDF"}
                     </span>
                     <button
                         onClick={() => onDownload(guide)}
                         className="flex items-center gap-1.5 text-xs font-medium text-teal transition-opacity hover:opacity-70"
                     >
                         <DownloadIcon />
-                        Download
+                        {t("Download")}
                     </button>
                 </div>
             </div>
@@ -222,26 +242,20 @@ function GuideCard({ guide, onDownload }) {
 /* ---------------- Newsletter CTA ---------------- */
 
 function NewsletterCta() {
-    const [email, setEmail] = useState("");
-    const [submitted, setSubmitted] = useState(false);
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (!email) return;
-        setSubmitted(true);
-    }
+    const { t } = useLanguage();
+    const { email, setEmail, submitted, sending, error, handleSubmit } = useSubscribe("newsletter-guides");
 
     return (
         <div className="rounded-2xl bg-navy p-8 text-white sm:p-10">
-            <p className="font-mono text-xs tracking-widest text-teal/80">RESEARCH & GUIDES</p>
+            <p className="font-mono text-xs tracking-widest text-teal/80">{t("RESEARCH & GUIDES")}</p>
             <h3 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
-                Get every new guide first.
+                {t("Get every new guide first.")}
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-slate">
-                We publish a new guide every few weeks — no spam, just the download link when it's ready.
+                {t("We publish a new guide every few weeks — no spam, just the download link when it's ready.")}
             </p>
             {submitted ? (
-                <p className="mt-6 text-sm text-teal">You&apos;re on the list.</p>
+                <p className="mt-6 text-sm text-teal">{t("You're on the list.")}</p>
             ) : (
                 <form onSubmit={handleSubmit} className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row">
                     <input
@@ -256,13 +270,15 @@ function NewsletterCta() {
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                         type="submit"
-                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
+                        disabled={sending}
+                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Subscribe
+                        {sending ? t("Subscribing…") : t("Subscribe")}
                         <ArrowIcon />
                     </motion.button>
                 </form>
             )}
+            {error && <p role="alert" className="mt-3 text-sm text-red-300">{t(error)}</p>}
         </div>
     );
 }
@@ -273,19 +289,20 @@ export default function ResearchGuides() {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [activeCategory, setActiveCategory] = useState("All");
+    const { t, te } = useLanguage();
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
     const [activeGuide, setActiveGuide] = useState(null);
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/research-guides`)
+        apiFetch("research-guides")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load research guides: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load research guides. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -384,7 +401,7 @@ export default function ResearchGuides() {
                                         : "bg-white text-slate hover:bg-navy/5"
                                 }`}
                             >
-                                {cat}
+                                {cat === "All" ? t("All") : cat}
                             </button>
                         ))}
                     </div>
@@ -402,7 +419,7 @@ export default function ResearchGuides() {
                     </motion.div>
 
                     {visibleGuides.length === 0 && (
-                        <p className="mt-10 text-center text-sm text-slate">No guides in this category yet.</p>
+                        <p className="mt-10 text-center text-sm text-slate">{t("No guides in this category yet.")}</p>
                     )}
 
                     {hasMore && (
@@ -413,7 +430,7 @@ export default function ResearchGuides() {
                                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                                 className="rounded-md border border-navy/15 px-6 py-3 text-sm font-medium text-ink transition-colors hover:border-teal hover:text-teal"
                             >
-                                Load more guides
+                                {t("Load more guides")}
                             </motion.button>
                         </div>
                     )}

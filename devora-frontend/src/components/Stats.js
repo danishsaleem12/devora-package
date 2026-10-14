@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function useCountUp(target, start, duration = 1600) {
   const [value, setValue] = useState(0);
@@ -52,11 +53,12 @@ function StatCard({ stat, index }) {
 }
 
 export default function Stats() {
+  const { te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/stats`)
+    apiFetch("stats")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -69,7 +71,7 @@ export default function Stats() {
     return (
       <section className="bg-paper px-6 py-16">
         <p className="mx-auto max-w-6xl text-sm text-slate">
-          Could not load stats: {error}. Is the backend running on {API_URL}?
+          {te("Could not load stats. Please try again in a moment.", error)}
         </p>
       </section>
     );

@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -70,17 +71,18 @@ export default function Portfolio() {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [activeFilter, setActiveFilter] = useState("All");
+    const { t, te } = useLanguage();
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/portfolio`)
+        apiFetch("portfolio")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load portfolio: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load portfolio. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -153,7 +155,7 @@ export default function Portfolio() {
                                         : "bg-white text-slate hover:bg-navy/5"
                                 }`}
                             >
-                                {f}
+                                {f === "All" ? t("All") : f}
                             </button>
                         ))}
                     </div>
@@ -176,9 +178,9 @@ export default function Portfolio() {
 
             {/* CTA */}
             <section className="bg-navy px-6 py-16 text-center text-white sm:py-20">
-                <h2 className="font-heading text-2xl font-bold sm:text-3xl">Got a project in mind?</h2>
+                <h2 className="font-heading text-2xl font-bold sm:text-3xl">{t("Got a project in mind?")}</h2>
                 <p className="mx-auto mt-3 max-w-md text-sm text-slate">
-                    Let&apos;s talk about what you&apos;re building and how we can help ship it.
+                    {t("Let's talk about what you're building and how we can help ship it.")}
                 </p>
                 <motion.a
                     whileHover={{ scale: 1.04 }}
@@ -187,7 +189,7 @@ export default function Portfolio() {
                     className="mt-6 inline-flex items-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
                 >
                     <ArrowIcon />
-                    Start a Project
+                    {t("Start a Project")}
                 </motion.a>
             </section>
         </>

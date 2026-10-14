@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -112,19 +113,20 @@ function CaseStudyCard({ study }) {
 /* ---------------- Main page ---------------- */
 
 export default function CaseStudies() {
+    const { t, te } = useLanguage();
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/case-studies`)
+        apiFetch("case-studies")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load case studies: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load case studies. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -210,9 +212,9 @@ export default function CaseStudies() {
 
             {/* CTA */}
             <section className="bg-navy px-6 py-16 text-center text-white sm:py-20">
-                <h2 className="font-heading text-2xl font-bold sm:text-3xl">Want numbers like these?</h2>
+                <h2 className="font-heading text-2xl font-bold sm:text-3xl">{t("Want numbers like these?")}</h2>
                 <p className="mx-auto mt-3 max-w-md text-sm text-slate">
-                    Tell us what you're building and we'll show you what to measure from day one.
+                    {t("Tell us what you're building and we'll show you what to measure from day one.")}
                 </p>
                 <motion.a
                     whileHover={{ scale: 1.04 }}
@@ -221,7 +223,7 @@ export default function CaseStudies() {
                     className="mt-6 inline-flex items-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
                 >
                     <ArrowIcon />
-                    Start a Project
+                    {t("Start a Project")}
                 </motion.a>
             </section>
         </>

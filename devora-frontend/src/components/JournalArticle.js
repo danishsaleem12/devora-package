@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { apiFetch } from "@/lib/api";
+import { useSubscribe } from "@/lib/useSubscribe";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 /* =========================================================================
    ICONS
@@ -152,6 +155,7 @@ function Waveform({ seed = [], playing }) {
    ========================================================================= */
 
 function AudioPlayerBar({ meta }) {
+    const { t } = useLanguage();
     const [playing, setPlaying] = useState(false);
     const [progress, setProgress] = useState(0.18);
 
@@ -173,7 +177,7 @@ function AudioPlayerBar({ meta }) {
             <div className="mx-auto flex max-w-4xl items-center gap-4">
                 <button
                     onClick={() => setPlaying((p) => !p)}
-                    aria-label={playing ? "Pause" : "Play"}
+                    aria-label={playing ? t("Pause") : t("Play")}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal text-navy transition-transform hover:scale-105"
                 >
                     {playing ? <PauseIcon /> : <PlayIcon />}
@@ -200,10 +204,11 @@ function AudioPlayerBar({ meta }) {
    ========================================================================= */
 
 function TableOfContents({ sections, activeId, onJump }) {
+    const { t } = useLanguage();
     if (!sections?.length) return null;
     return (
         <nav className="sticky top-24 hidden w-56 shrink-0 lg:block">
-            <p className="text-[11px] font-medium uppercase tracking-widest text-slate/50">In this episode</p>
+            <p className="text-[11px] font-medium uppercase tracking-widest text-slate/50">{t("In this episode")}</p>
             <ul className="mt-4 space-y-3 border-l border-black/5 pl-4">
                 {sections.map((s) => {
                     const isActive = s.id === activeId;
@@ -280,6 +285,7 @@ function CheckIcon() {
 }
 
 function KeyTakeaways({ items }) {
+    const { t } = useLanguage();
     if (!items?.length) return null;
     return (
         <motion.div
@@ -289,7 +295,7 @@ function KeyTakeaways({ items }) {
             viewport={{ once: true, amount: 0.2 }}
             className="rounded-2xl border border-black/5 bg-[#fafafa] p-6 sm:p-8"
         >
-            <p className="text-[11px] font-medium uppercase tracking-widest text-teal">Key takeaways</p>
+            <p className="text-[11px] font-medium uppercase tracking-widest text-teal">{t("Key takeaways")}</p>
             <ul className="mt-4 space-y-3">
                 {items.map((item) => (
                     <motion.li key={item} variants={rise} className="flex items-start gap-3">
@@ -309,6 +315,7 @@ function KeyTakeaways({ items }) {
    ========================================================================= */
 
 function TranscriptAccordion({ transcript }) {
+    const { t } = useLanguage();
     const [open, setOpen] = useState(false);
     if (!transcript?.length) return null;
 
@@ -319,8 +326,8 @@ function TranscriptAccordion({ transcript }) {
                 className="flex w-full items-center justify-between px-6 py-5 text-left sm:px-8"
             >
                 <span>
-                    <span className="block font-heading text-lg font-semibold text-ink">Read the transcript</span>
-                    <span className="block text-xs text-slate/60">{transcript.length} segments · lightly edited for clarity</span>
+                    <span className="block font-heading text-lg font-semibold text-ink">{t("Read the transcript")}</span>
+                    <span className="block text-xs text-slate/60">{transcript.length} {t("segments · lightly edited for clarity")}</span>
                 </span>
                 <motion.span animate={{ rotate: open ? 180 : 0 }} className="text-slate">
                     <ChevronDown />
@@ -383,6 +390,7 @@ function AuthorCard({ author }) {
    ========================================================================= */
 
 function ShareBar() {
+    const { t } = useLanguage();
     const [copied, setCopied] = useState(false);
 
     function handleCopy() {
@@ -395,16 +403,16 @@ function ShareBar() {
 
     return (
         <div className="flex items-center gap-2">
-            <span className="hidden text-[11px] uppercase tracking-widest text-slate/50 sm:block">Share</span>
+            <span className="hidden text-[11px] uppercase tracking-widest text-slate/50 sm:block">{t("Share")}</span>
             <button
                 onClick={handleCopy}
                 className="flex h-8 items-center gap-1.5 rounded-full border border-black/10 px-3 text-xs text-slate transition-colors hover:border-teal hover:text-teal"
             >
                 <LinkIcon />
-                {copied ? "Copied" : "Copy link"}
+                {copied ? t("Copied") : t("Copy link")}
             </button>
             <button
-                aria-label="Share"
+                aria-label={t("Share")}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-black/10 text-slate transition-colors hover:border-teal hover:text-teal"
             >
                 <ShareIcon />
@@ -418,6 +426,7 @@ function ShareBar() {
    ========================================================================= */
 
 function RelatedCard({ episode }) {
+    const { t } = useLanguage();
     return (
         <motion.a
             href={episode.href || "#"}
@@ -441,7 +450,7 @@ function RelatedCard({ episode }) {
                 <h4 className="font-heading text-base font-semibold leading-snug text-white">{episode.title}</h4>
                 <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate">{episode.excerpt}</p>
                 <span className="mt-3 flex items-center gap-1.5 text-xs font-medium text-teal opacity-0 transition-opacity group-hover:opacity-100">
-                    Listen now <ArrowIcon size={10} />
+                    {t("Listen now")} <ArrowIcon size={10} />
                 </span>
             </div>
         </motion.a>
@@ -453,26 +462,20 @@ function RelatedCard({ episode }) {
    ========================================================================= */
 
 function NewsletterCta() {
-    const [email, setEmail] = useState("");
-    const [submitted, setSubmitted] = useState(false);
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (!email) return;
-        setSubmitted(true);
-    }
+    const { t } = useLanguage();
+    const { email, setEmail, submitted, sending, error, handleSubmit } = useSubscribe("newsletter-journal");
 
     return (
         <div className="rounded-2xl bg-navy p-8 text-white sm:p-10">
-            <p className="font-mono text-xs tracking-widest text-teal/80">DEVORA UNSCRIPTED</p>
+            <p className="font-mono text-xs tracking-widest text-teal/80">{t("DEVORA UNSCRIPTED")}</p>
             <h3 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
-                New episodes, straight to your inbox.
+                {t("New episodes, straight to your inbox.")}
             </h3>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-slate">
-                No spam, no drip campaigns — just an email whenever we publish something worth fifteen minutes.
+                {t("No spam, no drip campaigns — just an email whenever we publish something worth fifteen minutes.")}
             </p>
             {submitted ? (
-                <p className="mt-6 text-sm text-teal">You&apos;re on the list — first episode lands in your inbox soon.</p>
+                <p className="mt-6 text-sm text-teal">{t("You're on the list — first episode lands in your inbox soon.")}</p>
             ) : (
                 <form onSubmit={handleSubmit} className="mt-6 flex max-w-md flex-col gap-3 sm:flex-row">
                     <input
@@ -487,13 +490,15 @@ function NewsletterCta() {
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
                         type="submit"
-                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
+                        disabled={sending}
+                        className="flex shrink-0 items-center justify-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        Subscribe
+                        {sending ? t("Subscribing…") : t("Subscribe")}
                         <ArrowIcon />
                     </motion.button>
                 </form>
             )}
+            {error && <p role="alert" className="mt-3 text-sm text-red-300">{t(error)}</p>}
         </div>
     );
 }
@@ -503,6 +508,7 @@ function NewsletterCta() {
    ========================================================================= */
 
 function BackToTop() {
+    const { t } = useLanguage();
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -521,7 +527,7 @@ function BackToTop() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    aria-label="Back to top"
+                    aria-label={t("Back to top")}
                     className="fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-teal text-navy shadow-xl"
                 >
                     <ArrowUp />
@@ -535,7 +541,8 @@ function BackToTop() {
    MAIN COMPONENT
    ========================================================================= */
 
-export default function JournalArticle() {
+export default function JournalArticle({ slug }) {
+    const { t, te } = useLanguage();
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [activeSection, setActiveSection] = useState(null);
@@ -544,7 +551,7 @@ export default function JournalArticle() {
     const sectionRefs = useRef({});
 
     useEffect(() => {
-        fetch(`${API_URL}/api/journal`)
+        apiFetch(slug ? `journal-article/${encodeURIComponent(slug)}` : "journal-article")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
@@ -554,9 +561,9 @@ export default function JournalArticle() {
                 setActiveSection(json?.sections?.[0]?.id ?? null);
             })
             .catch((err) =>
-                setError(`Could not load journal entry: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load journal entry. Please try again in a moment.", err.message))
             );
-    }, []);
+    }, [slug]);
 
     useEffect(() => {
         if (!data?.sections?.length) return;
@@ -665,14 +672,14 @@ export default function JournalArticle() {
                         <div className="flex items-center gap-5">
                             <button
                                 onClick={() => setPlaying((p) => !p)}
-                                aria-label={playing ? "Pause" : "Play"}
+                                aria-label={playing ? t("Pause") : t("Play")}
                                 className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal text-navy transition-transform hover:scale-105"
                             >
                                 {playing ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
                             </button>
                             <div className="min-w-0 flex-1">
                                 <p className="truncate text-sm font-semibold text-white">{meta?.title}</p>
-                                <p className="text-xs text-slate/60">{meta?.showName || "DEVORA UNSCRIPTED"}</p>
+                                <p className="text-xs text-slate/60">{meta?.showName || t("DEVORA UNSCRIPTED")}</p>
                             </div>
                         </div>
                         <div className="mt-6">
@@ -681,7 +688,7 @@ export default function JournalArticle() {
 
                         {platformBadges.length > 0 && (
                             <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
-                                <span className="text-[11px] uppercase tracking-widest text-slate/50">Listen on</span>
+                                <span className="text-[11px] uppercase tracking-widest text-slate/50">{t("Listen on")}</span>
                                 {platformBadges.map((p) => {
                                     const Icon = PLATFORM_ICONS[p.id] || PLATFORM_ICONS.spotify;
                                     return (
@@ -766,11 +773,11 @@ export default function JournalArticle() {
                     <div className="mx-auto max-w-5xl">
                         <div className="flex items-center justify-between">
                             <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl">
-                                More from the journal
+                                {t("More from the journal")}
                             </h2>
-                            <a href="/resources" className="flex items-center gap-1.5 text-sm font-medium text-teal">
-                                View all <ArrowIcon size={10} />
-                            </a>
+                            <Link href="/resources/journal" className="flex items-center gap-1.5 text-sm font-medium text-teal">
+                                {t("View all")} <ArrowIcon size={10} />
+                            </Link>
                         </div>
                         <motion.div
                             variants={reduce ? undefined : container}

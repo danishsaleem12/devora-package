@@ -1,13 +1,15 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const TAG_STYLES = {
   BLOG: "bg-teal/10 text-teal",
   GUIDE: "bg-blue-500/10 text-blue-600",
+  "GUÍA": "bg-blue-500/10 text-blue-600", // Spanish
   UPDATE: "bg-purple-500/10 text-purple-600",
 };
 
@@ -61,11 +63,12 @@ function InsightCard({ item, index }) {
 }
 
 export default function Insights() {
+  const { t, te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/insights`)
+    apiFetch("insights")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -78,7 +81,7 @@ export default function Insights() {
     return (
       <section className="border-t border-slate/10 bg-white px-6 py-16">
         <p className="mx-auto max-w-6xl text-sm text-slate">
-          Could not load insights: {error}. Is the backend running on {API_URL}?
+          {te("Could not load insights. Please try again in a moment.", error)}
         </p>
       </section>
     );
@@ -106,7 +109,7 @@ export default function Insights() {
             href={data.viewAllHref}
             className="flex w-fit items-center gap-1.5 text-sm font-medium text-navy transition-all hover:gap-2.5"
           >
-            View all insights
+            {t("View all insights")}
             <ArrowIcon />
           </a>
         </motion.div>

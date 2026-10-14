@@ -5,6 +5,7 @@ import ServiceHero from "@/components/services/ServiceHero";
 import ServiceProblem from "@/components/services/ServiceProblem";
 import ServiceOfferings from "@/components/services/ServiceOfferings";
 import ServiceProcess from "@/components/services/ServiceProcess";
+import ProductUseCases from "@/components/products/ProductUseCases";
 import ServiceTechStack from "@/components/services/ServiceTechStack";
 import ServiceWhy from "@/components/services/ServiceWhy";
 import ServiceFaq from "@/components/services/ServiceFaq";
@@ -38,7 +39,7 @@ export default async function SolutionPage({ params }) {
         <ServiceProblem service={solution} />
         <ServiceOfferings service={solution} />
         <ServiceProcess service={solution} />
-        {/* use cases section goes here */}
+        <ProductUseCases product={solution} />
         <ServiceTechStack service={solution} />
         <ServiceWhy service={solution} />
         <ServiceFaq service={solution} />

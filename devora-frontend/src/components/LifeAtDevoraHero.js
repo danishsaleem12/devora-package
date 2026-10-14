@@ -1,9 +1,9 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -33,7 +33,7 @@ export default function LifeAtDevoraHero() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/life-at-devora-hero`)
+        apiFetch("life-at-devora-hero")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();

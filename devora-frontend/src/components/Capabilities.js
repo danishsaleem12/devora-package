@@ -2,10 +2,10 @@
 
 "use client";
 
+import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const TAB_DURATION_MS = 5500;
 
 function CheckIcon() {
@@ -92,7 +92,7 @@ export default function Capabilities() {
     const [paused, setPaused] = useState(false);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/capabilities`)
+        apiFetch("capabilities")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();

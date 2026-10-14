@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 
 function ArrowIcon() {
     return (
@@ -36,7 +37,10 @@ function QuoteIcon() {
     );
 }
 
-export default function ServiceWhy({ service }) {
+export default function ServiceWhy({ service: rawService }) {
+  const { t } = useLanguage();
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.why;
     if (!data?.reasons?.length) return null;
 
@@ -76,7 +80,7 @@ export default function ServiceWhy({ service }) {
                                 href="/contact"
                                 className="mt-8 flex w-fit items-center gap-1.5 rounded-md border border-white/20 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
                             >
-                                Talk to our team
+                                {t("Talk to our team")}
                                 <ArrowIcon />
                             </motion.a>
                         </motion.div>

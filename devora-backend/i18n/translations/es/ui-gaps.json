@@ -1,0 +1,20 @@
+{
+  "Subscribing…": "Suscribiendo…",
+  "Could not load the journal. Please try again in a moment.": "No se pudo cargar el diario. Inténtalo de nuevo en un momento.",
+  "No essays in this category yet.": "Todavía no hay ensayos en esta categoría.",
+  "Resume (PDF, DOC or DOCX, up to 5 MB)": "Currículum (PDF, DOC o DOCX, hasta 5 MB)",
+  "Your resume is too large. The limit is 5 MB.": "Tu currículum es demasiado grande. El límite es de 5 MB.",
+  "Could not read your upload. Please try again.": "No se pudo leer tu archivo. Inténtalo de nuevo.",
+  "Please upload your resume as a PDF, DOC or DOCX file.": "Sube tu currículum como archivo PDF, DOC o DOCX.",
+  "Too many attempts. Please try again in a few minutes.": "Demasiados intentos. Inténtalo de nuevo en unos minutos.",
+  "Could not save your email. Please try again.": "No se pudo guardar tu correo. Inténtalo de nuevo.",
+  "Guide not found": "Guía no encontrada",
+  "Could not unlock the download. Please try again.": "No se pudo desbloquear la descarga. Inténtalo de nuevo.",
+  "This download link has expired. Please request it again.": "Este enlace de descarga ha caducado. Solicítalo de nuevo.",
+  "File not found": "Archivo no encontrado",
+  "Not found": "No encontrado",
+  "Job deleted": "Oferta eliminada",
+  "Message deleted": "Mensaje eliminado",
+  "Application deleted": "Candidatura eliminada",
+  "Subscriber deleted": "Suscriptor eliminado"
+}

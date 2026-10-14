@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const TONES = {
   teal: { text: "text-teal", bg: "bg-teal/10", border: "border-teal/30", bar: "bg-teal", dot: "bg-teal" },
@@ -102,6 +103,7 @@ function StackMarquee({ items }) {
 /* ---------------- Case study card ---------------- */
 
 function CaseStudyCard({ item, index }) {
+  const { t } = useLanguage();
   const tone = TONES[item.tone] || TONES.teal;
   const Icon = ICONS[item.icon] || ICONS.chat;
   const [started, setStarted] = useState(false);
@@ -146,7 +148,7 @@ function CaseStudyCard({ item, index }) {
             </p>
           </div>
           <span className="flex items-center gap-1 text-xs font-medium text-ink/50 transition-all duration-300 group-hover:gap-2 group-hover:text-ink">
-            Read case study
+            {t("Read case study")}
             <ArrowIcon />
           </span>
         </div>
@@ -158,6 +160,7 @@ function CaseStudyCard({ item, index }) {
 /* ---------------- Draggable carousel ---------------- */
 
 function CaseStudyCarousel({ items }) {
+  const { t, te } = useLanguage();
   const trackRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -191,7 +194,7 @@ function CaseStudyCarousel({ items }) {
           whileTap={{ scale: 0.95 }}
           onClick={() => scrollBy(-380)}
           disabled={!canScrollLeft}
-          aria-label="Scroll left"
+          aria-label={t("Scroll left")}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/60 transition-colors hover:border-white/40 hover:text-white disabled:opacity-30"
         >
           <span className="rotate-180"><ArrowIcon size={14} /></span>
@@ -201,7 +204,7 @@ function CaseStudyCarousel({ items }) {
           whileTap={{ scale: 0.95 }}
           onClick={() => scrollBy(380)}
           disabled={!canScrollRight}
-          aria-label="Scroll right"
+          aria-label={t("Scroll right")}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-teal bg-teal text-navy transition-opacity hover:opacity-90 disabled:opacity-30"
         >
           <ArrowIcon size={14} />
@@ -218,7 +221,7 @@ export default function Work() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/work`)
+    apiFetch("work")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -231,7 +234,7 @@ export default function Work() {
     return (
       <section className="bg-navy px-6 py-16">
         <p className="mx-auto max-w-6xl text-sm text-teal">
-          Could not load work section: {error}. Is the backend running on {API_URL}?
+          {te("Could not load work section. Please try again in a moment.", error)}
         </p>
       </section>
     );

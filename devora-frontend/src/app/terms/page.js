@@ -10,7 +10,7 @@ export const metadata = {
 export default function TermsPage() {
     return (
         <div>
-            <TermsConditionsContent />;
+            <TermsConditionsContent />
             <ClosingCta />
             <Footer />
         </div>

@@ -2,10 +2,11 @@
 
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -22,11 +23,12 @@ function ArrowIcon({ size = 12 }) {
 }
 
 export default function OpenRoles() {
+    const { t } = useLanguage();
     const [data, setData] = useState(null);
     const [activeFilter, setActiveFilter] = useState("All");
 
     useEffect(() => {
-        fetch(`${API_URL}/api/jobs`)
+        apiFetch("jobs")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
@@ -58,9 +60,12 @@ export default function OpenRoles() {
     const filteredRoles = useMemo(() => {
         if (!data) return [];
         const matches =
-            activeFilter === "All" ? data.roles : data.roles.filter((r) => r.category === activeFilter);
+            // job categories arrive already translated from the API, so accept the English or the translated name
+            activeFilter === "All"
+                ? data.roles
+                : data.roles.filter((r) => r.category === activeFilter || r.category === t(activeFilter));
         return matches.slice(0, MAX_VISIBLE);
-    }, [data, activeFilter]);
+    }, [data, activeFilter, t]);
 
     if (!data) return <div className="min-h-[500px] bg-white" />;
 
@@ -70,8 +75,8 @@ export default function OpenRoles() {
         <section className="bg-white px-4 py-10 sm:px-8 lg:px-12">
             <div className="flex flex-wrap items-end justify-between gap-6">
                 <div>
-                    <span className="text-xs font-medium tracking-wide text-teal">{tag}</span>
-                    <h2 className="mt-2 font-heading text-3xl font-semibold text-ink sm:text-4xl">{heading}</h2>
+                    <span className="text-xs font-medium tracking-wide text-teal">{t(tag)}</span>
+                    <h2 className="mt-2 font-heading text-3xl font-semibold text-ink sm:text-4xl">{t(heading)}</h2>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -84,7 +89,7 @@ export default function OpenRoles() {
                                 : "border-black/10 text-slate hover:border-black/20 hover:text-ink"
                                 }`}
                         >
-                            {f}
+                            {t(f)}
                         </button>
                     ))}
                 </div>
@@ -124,7 +129,7 @@ export default function OpenRoles() {
                     href={ctaHref}
                     className="inline-flex items-center gap-1.5 rounded-md border border-teal/40 px-5 py-2.5 text-sm font-medium text-teal transition-colors hover:bg-teal/10"
                 >
-                    {ctaLabel}
+                    {t(ctaLabel)}
                     <ArrowIcon />
                 </a>
             </div>

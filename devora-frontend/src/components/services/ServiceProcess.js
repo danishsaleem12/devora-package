@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLocalized } from "@/components/LanguageProvider";
 
 function Step({ step, index }) {
     return (
@@ -33,7 +34,9 @@ function Step({ step, index }) {
     );
 }
 
-export default function ServiceProcess({ service }) {
+export default function ServiceProcess({ service: rawService }) {
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.workflow;
     if (!data?.steps?.length) return null;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 import { motion } from "framer-motion";
 
 function ArrowIcon({ size = 12 }) {
@@ -104,7 +105,10 @@ const fadeUp = (delay = 0) => ({
     transition: { duration: 0.5, delay, ease: "easeOut" },
 });
 
-export default function ServiceHero({ service }) {
+export default function ServiceHero({ service: rawService }) {
+  const { t } = useLanguage();
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const { eyebrow, headline, subheadline, primaryCta, secondaryCta, visual, highlights = [], tags = [], title, tagsLabel } = service;
     const parent = service.parent ?? { label: "Services", href: "/services" };
 
@@ -114,10 +118,10 @@ export default function ServiceHero({ service }) {
 
             <div className="relative mx-auto max-w-[1600px]">
                 {/* Breadcrumb */}
-                <motion.nav {...fadeUp(0)} aria-label="Breadcrumb" className="mb-10 flex items-center gap-2 text-xs text-slate">
-                    <Link href="/" className="transition-colors hover:text-white">Home</Link>
+                <motion.nav {...fadeUp(0)} aria-label={t("Breadcrumb")} className="mb-10 flex items-center gap-2 text-xs text-slate">
+                    <Link href="/" className="transition-colors hover:text-white">{t("Home")}</Link>
                     <span className="text-white/20">/</span>
-                    <Link href={parent.href} className="transition-colors hover:text-white">{parent.label}</Link>
+                    <Link href={parent.href} className="transition-colors hover:text-white">{t(parent.label)}</Link>
                     <span className="text-white/20">/</span>
                     <span className="text-white/80">{title}</span>
                 </motion.nav>
@@ -184,7 +188,7 @@ export default function ServiceHero({ service }) {
 
                     {tags.length > 0 && (
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="mr-2 text-[11px] font-medium tracking-widest text-slate/60">{tagsLabel ?? "BUILT WITH"}</span>
+                            <span className="mr-2 text-[11px] font-medium tracking-widest text-slate/60">{tagsLabel ?? t("BUILT WITH")}</span>
                             {tags.map((tag) => (
                                 <span
                                     key={tag}

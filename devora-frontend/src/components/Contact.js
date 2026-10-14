@@ -1,9 +1,10 @@
 "use client";
 
+import { API_URL, apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const ICONS = {
   briefcase: (props) => (
@@ -29,11 +30,12 @@ function ArrowIcon({ size = 12 }) {
 }
 
 function FieldInput({ placeholder, type = "text", required, name, span }) {
+  const { t } = useLanguage();
   return (
     <input
       type={type}
       name={name}
-      placeholder={placeholder + (required ? " *" : "")}
+      placeholder={t(placeholder) + (required ? " *" : "")}
       required={required}
       className={`w-full rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-slate/50 outline-none transition-colors focus:border-teal ${span ? "sm:col-span-2" : ""}`}
     />
@@ -41,12 +43,15 @@ function FieldInput({ placeholder, type = "text", required, name, span }) {
 }
 
 export default function Contact() {
+  const { t, te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
-    fetch(`${API_URL}/api/contact`)
+    apiFetch("contact")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -55,16 +60,41 @@ export default function Contact() {
       .catch((err) => setError(err.message));
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitted(true);
+    if (sending) return;
+    setSending(true);
+    setSubmitError("");
+
+    const form = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(form.entries()); // includes the hidden "website" honeypot
+
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
+      setSubmitted(true);
+    } catch (err) {
+      // a network failure surfaces as "Failed to fetch": show a friendly message instead
+      setSubmitError(
+        err instanceof TypeError ? "Could not reach the server. Please try again." : err.message
+      );
+    } finally {
+      setSending(false);
+    }
   }
 
   if (error) {
     return (
       <section className="bg-navy px-6 py-24 text-white">
         <p className="mx-auto max-w-6xl text-sm text-teal">
-          Could not load contact page: {error}. Is the backend running on {API_URL}?
+          {te("Could not load contact page. Please try again in a moment.", error)}
         </p>
       </section>
     );
@@ -123,13 +153,22 @@ export default function Contact() {
                     <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <h3 className="mt-4 text-lg font-semibold text-white">Message sent</h3>
+                <h3 className="mt-4 text-lg font-semibold text-white">{t("Message sent")}</h3>
                 <p className="mt-1.5 max-w-xs text-sm text-slate">
-                  Thanks for reaching out — we'll get back to you within a business day.
+                  {t("Thanks for reaching out — we'll get back to you within a business day.")}
                 </p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Honeypot: hidden from people, bots fill it in. Must stay empty. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                />
                 <FieldInput placeholder="First Name" required name="firstName" />
                 <FieldInput placeholder="Last Name" name="lastName" />
                 <FieldInput placeholder="Business email" type="email" required name="email" />
@@ -142,7 +181,7 @@ export default function Contact() {
                   defaultValue=""
                   className="w-full rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white outline-none transition-colors focus:border-teal"
                 >
-                  <option value="" disabled className="text-slate">I am looking for *</option>
+                  <option value="" disabled className="text-slate">{t("I am looking for *")}</option>
                   {data.form.lookingForOptions.map((opt) => (
                     <option key={opt} value={opt} className="text-ink">{opt}</option>
                   ))}
@@ -150,18 +189,25 @@ export default function Contact() {
 
                 <textarea
                   name="message"
-                  placeholder="Tell us more about your project"
+                  placeholder={t("Tell us more about your project")}
                   rows={4}
                   className="w-full resize-none rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-slate/50 outline-none transition-colors focus:border-teal sm:col-span-2"
                 />
 
+                {submitError && (
+                  <p role="alert" className="rounded-lg border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-300 sm:col-span-2">
+                    {t(submitError)}
+                  </p>
+                )}
+
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="rounded-lg bg-teal px-5 py-3.5 text-sm font-semibold text-navy transition-opacity hover:opacity-90 sm:col-span-2"
+                  disabled={sending}
+                  whileHover={{ scale: sending ? 1 : 1.01 }}
+                  whileTap={{ scale: sending ? 1 : 0.98 }}
+                  className="rounded-lg bg-teal px-5 py-3.5 text-sm font-semibold text-navy transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2"
                 >
-                  {data.form.submitLabel}
+                  {sending ? t("Sending…") : data.form.submitLabel}
                 </motion.button>
               </form>
             )}

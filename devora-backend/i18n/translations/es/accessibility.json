@@ -1,0 +1,19 @@
+{
+  "Accessibility Statement": "Declaración de accesibilidad",
+  "Last updated: September 6, 2026": "Última actualización: 6 de septiembre de 2026",
+  "We believe everyone should be able to explore careers at Devora and apply for a role, regardless of ability. This page outlines our approach to accessibility and how to reach us if something isn't working for you.": "Creemos que todas las personas deberían poder explorar las carreras en Devora y postularse a un puesto, sin importar su capacidad. Esta página describe nuestro enfoque de accesibilidad y cómo contactarnos si algo no te funciona.",
+  "1. Our Commitment": "1. Nuestro compromiso",
+  "Devora is committed to making our careers site usable by everyone, including people with disabilities. We aim to meet or exceed the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA.": "Devora se compromete a que nuestro sitio de empleo pueda ser usado por todas las personas, incluidas las personas con discapacidad. Nuestro objetivo es cumplir o superar las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.1, nivel AA.",
+  "2. What We're Doing": "2. Lo que estamos haciendo",
+  "We design with sufficient color contrast, keyboard navigability, and clear focus states.": "Diseñamos con un contraste de color suficiente, navegación por teclado y estados de foco claros.",
+  "We use semantic HTML and labeled form fields so our application forms work well with screen readers.": "Usamos HTML semántico y campos de formulario con etiquetas para que nuestros formularios de postulación funcionen bien con lectores de pantalla.",
+  "We respect reduced-motion preferences — if your device or browser is set to reduce motion, our site's animations are minimized or disabled automatically.": "Respetamos las preferencias de movimiento reducido: si tu dispositivo o navegador está configurado para reducir el movimiento, las animaciones de nuestro sitio se minimizan o se desactivan automáticamente.",
+  "We're continuing to test and improve accessibility across the site on an ongoing basis.": "Seguimos probando y mejorando la accesibilidad en todo el sitio de forma continua.",
+  "3. Known Limitations": "3. Limitaciones conocidas",
+  "Some areas of our site are still being improved for full accessibility compliance. If you encounter a barrier, please let us know so we can prioritize a fix.": "Algunas áreas de nuestro sitio aún se están mejorando para cumplir plenamente con la accesibilidad. Si encuentras una barrera, avísanos para que podamos priorizar su corrección.",
+  "4. Feedback": "4. Comentarios",
+  "If you experience any difficulty accessing content or using features on this site, we want to hear from you. Contact us at hello@devora.com, and include the page and a description of the issue.": "Si tienes alguna dificultad para acceder al contenido o usar las funciones de este sitio, queremos saberlo. Escríbenos a hello@devora.com e incluye la página y una descripción del problema.",
+  "We aim to respond to accessibility feedback within a reasonable timeframe and address issues as quickly as possible.": "Nos esforzamos por responder a los comentarios sobre accesibilidad en un plazo razonable y resolver los problemas lo antes posible.",
+  "5. Alternative Access": "5. Acceso alternativo",
+  "If you're unable to complete a job application through our online form due to an accessibility barrier, contact us and we'll help you apply through an alternative method.": "Si no puedes completar una postulación a través de nuestro formulario en línea debido a una barrera de accesibilidad, contáctanos y te ayudaremos a postularte por otro medio."
+}

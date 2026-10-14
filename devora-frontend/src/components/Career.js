@@ -2,10 +2,10 @@
 
 "use client";
 
+import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -89,7 +89,7 @@ export default function Career() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/career`)
+        apiFetch("career")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();

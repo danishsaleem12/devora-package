@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon({ size = 12 }) {
     return (
@@ -113,19 +114,20 @@ function PrincipleCard({ principle }) {
 /* ---------------- Main page ---------------- */
 
 export default function Process() {
+    const { t, te } = useLanguage();
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/process`)
+        apiFetch("process")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load process page: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load process page. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -217,7 +219,7 @@ export default function Process() {
                             variants={rise}
                             className="font-heading text-3xl font-semibold text-ink sm:text-4xl"
                         >
-                            {principlesHeading || "How we keep it consistent"}
+                            {principlesHeading || t("How we keep it consistent")}
                         </motion.h2>
                         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             {principles.map((p) => (
@@ -230,9 +232,9 @@ export default function Process() {
 
             {/* CTA */}
             <section className="bg-navy px-6 py-16 text-center text-white sm:py-20">
-                <h2 className="font-heading text-2xl font-bold sm:text-3xl">Ready to see it in action?</h2>
+                <h2 className="font-heading text-2xl font-bold sm:text-3xl">{t("Ready to see it in action?")}</h2>
                 <p className="mx-auto mt-3 max-w-md text-sm text-slate">
-                    Let&apos;s walk through how this process would apply to your project.
+                    {t("Let's walk through how this process would apply to your project.")}
                 </p>
                 <motion.a
                     whileHover={{ scale: 1.04 }}
@@ -241,7 +243,7 @@ export default function Process() {
                     className="mt-6 inline-flex items-center gap-1.5 rounded-md bg-teal px-5 py-3 text-sm font-medium text-navy"
                 >
                     <ArrowIcon />
-                    Start a Project
+                    {t("Start a Project")}
                 </motion.a>
             </section>
         </>

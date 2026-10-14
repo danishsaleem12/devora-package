@@ -2,6 +2,8 @@
 
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
+import AppLoader from "@/components/AppLoader";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-heading",
@@ -25,7 +27,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${plusJakarta.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AppLoader />
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

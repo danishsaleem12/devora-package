@@ -2,10 +2,11 @@
 
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const AUTO_ADVANCE_MS = 7000;
 
 /* ---------------- Icons ---------------- */
@@ -320,6 +321,7 @@ function SlideVisual({ slide }) {
 /* ---------------- Main component ---------------- */
 
 export default function Hero() {
+    const { t, te } = useLanguage();
     const [slides, setSlides] = useState(null);
     const [featuredIn, setFeaturedIn] = useState([]);
     const [error, setError] = useState(null);
@@ -329,7 +331,7 @@ export default function Hero() {
     const touchStartX = useRef(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/hero`)
+        apiFetch("hero")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
@@ -339,7 +341,7 @@ export default function Hero() {
                 setFeaturedIn(data.featuredIn || []);
             })
             .catch((err) =>
-                setError(`Could not load hero content: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load hero content. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -498,7 +500,7 @@ export default function Hero() {
                 <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
                     {featuredIn.length > 0 && (
                         <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                            <span className="text-[11px] font-medium tracking-widest text-slate/60">AS SEEN IN</span>
+                            <span className="text-[11px] font-medium tracking-widest text-slate/60">{t("AS SEEN IN")}</span>
                             {featuredIn.map((name, i) => (
                                 <motion.span
                                     key={name}
@@ -520,7 +522,7 @@ export default function Hero() {
                                     <button
                                         key={s.id}
                                         onClick={() => goTo(i)}
-                                        aria-label={`Go to slide ${i + 1}`}
+                                        aria-label={t("Go to slide {n}").replace("{n}", i + 1)}
                                         className={`h-1.5 rounded-full transition-all duration-300 ${i === index ? "w-6 bg-teal" : "w-1.5 bg-white/20"}`}
                                     />
                                 ))}
@@ -529,7 +531,7 @@ export default function Hero() {
                                 whileHover={{ scale: 1.08 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={prev}
-                                aria-label="Previous slide"
+                                aria-label={t("Previous slide")}
                                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white/40 hover:text-white"
                             >
                                 <ChevronLeft />
@@ -538,7 +540,7 @@ export default function Hero() {
                                 whileHover={{ scale: 1.08 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={next}
-                                aria-label="Next slide"
+                                aria-label={t("Next slide")}
                                 className="flex h-9 w-9 items-center justify-center rounded-full border border-teal text-teal transition-colors hover:bg-teal hover:text-navy"
                             >
                                 <ChevronRight />

@@ -1,13 +1,19 @@
 "use client";
 
+import { API_URL } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/components/LanguageProvider";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const CATEGORIES = ["Engineering", "AI & Data", "Design", "Cloud & DevOps"];
 const WORKPLACE_TYPES = ["On-site", "Hybrid", "Remote"];
-const JOB_TYPES = ["Full-time", "Contract"];
+const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
+const STAGES = [
+  { value: "graduate", label: "Graduate & Early Career" },
+  { value: "experienced", label: "Experienced Hires" },
+  { value: "leadership", label: "Leadership" },
+];
 
 const EMPTY_FORM = {
   slug: "",
@@ -18,6 +24,7 @@ const EMPTY_FORM = {
   location: "",
   postedAgo: "",
   category: "Engineering",
+  stage: "experienced",
   description: "",
   responsibilities: "",
   requirements: "",
@@ -46,6 +53,9 @@ function authHeaders() {
 
 export default function AdminJobs() {
   const router = useRouter();
+  const { t } = useLanguage();
+  // "Backend responded with 500" in the visitor's language
+  const statusError = (status) => new Error(`${t("Backend responded with")} ${status}`);
   const [jobs, setJobs] = useState(null);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -63,7 +73,7 @@ export default function AdminJobs() {
         router.push("/admin/login");
         return;
       }
-      if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
+      if (!res.ok) throw statusError(res.status);
       const data = await res.json();
       setJobs(data);
       setError("");
@@ -101,6 +111,7 @@ export default function AdminJobs() {
       location: job.location || "",
       postedAgo: job.postedAgo || "",
       category: job.category || "Engineering",
+      stage: job.stage || "experienced",
       description: job.description || "",
       responsibilities: (job.responsibilities || []).join("\n"),
       requirements: (job.requirements || []).join("\n"),
@@ -152,7 +163,7 @@ export default function AdminJobs() {
       }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || `Backend responded with ${res.status}`);
+        throw new Error(data.error || statusError(res.status).message);
       }
       setShowForm(false);
       await loadJobs();
@@ -175,7 +186,7 @@ export default function AdminJobs() {
         router.push("/admin/login");
         return;
       }
-      if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
+      if (!res.ok) throw statusError(res.status);
       await loadJobs();
     } catch (err) {
       setError(err.message);
@@ -183,7 +194,7 @@ export default function AdminJobs() {
   }
 
   async function deleteJob(job) {
-    if (!confirm(`Permanently delete "${job.title}"? This can't be undone.`)) return;
+    if (!confirm(t('Permanently delete "{title}"? This can\'t be undone.').replace("{title}", job.title))) return;
     try {
       const res = await fetch(`${API_URL}/api/jobs/${job._id}`, {
         method: "DELETE",
@@ -194,7 +205,7 @@ export default function AdminJobs() {
         router.push("/admin/login");
         return;
       }
-      if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
+      if (!res.ok) throw statusError(res.status);
       await loadJobs();
     } catch (err) {
       setError(err.message);
@@ -205,36 +216,42 @@ export default function AdminJobs() {
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-heading text-2xl font-bold text-ink">Manage Job Postings</h1>
-          <p className="mt-1 text-sm text-slate">Internal admin — not linked from the public site.</p>
+          <h1 className="font-heading text-2xl font-bold text-ink">{t("Manage Job Postings")}</h1>
+          <p className="mt-1 text-sm text-slate">{t("Internal admin area.")}</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={openCreateForm}
             className="rounded-md bg-teal px-4 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90"
           >
-            + New Job
+            {t("+ New Job")}
+          </button>
+          <button
+            onClick={() => router.push("/admin/inbox")}
+            className="rounded-md border border-black/10 px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-black/20"
+          >
+            {t("Inbox")}
           </button>
           <button
             onClick={handleLogout}
             className="rounded-md border border-black/10 px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-black/20"
           >
-            Log out
+            {t("Log out")}
           </button>
         </div>
       </div>
 
       {error && (
         <p className="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-          {error}
+          {t(error)}
         </p>
       )}
 
       {/* Job list */}
       <div className="mt-8 divide-y divide-black/10 border-t border-black/10">
-        {jobs === null && <p className="py-8 text-sm text-slate">Loading jobs…</p>}
+        {jobs === null && <p className="py-8 text-sm text-slate">{t("Loading jobs…")}</p>}
         {jobs && jobs.length === 0 && (
-          <p className="py-8 text-sm text-slate">No jobs yet — click "New Job" to add one.</p>
+          <p className="py-8 text-sm text-slate">{t('No jobs yet — click "New Job" to add one.')}</p>
         )}
         {jobs?.map((job) => (
           <div key={job._id} className="flex flex-wrap items-center justify-between gap-3 py-4">
@@ -246,7 +263,7 @@ export default function AdminJobs() {
                     job.isOpen ? "bg-teal/10 text-teal" : "bg-black/5 text-slate"
                   }`}
                 >
-                  {job.isOpen ? "Open" : "Closed"}
+                  {job.isOpen ? t("Open") : t("Closed")}
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate">
@@ -258,19 +275,19 @@ export default function AdminJobs() {
                 onClick={() => openEditForm(job)}
                 className="rounded-md border border-black/10 px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-black/20"
               >
-                Edit
+                {t("Edit")}
               </button>
               <button
                 onClick={() => toggleOpen(job)}
                 className="rounded-md border border-black/10 px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-black/20"
               >
-                {job.isOpen ? "Close" : "Reopen"}
+                {job.isOpen ? t("Close") : t("Reopen")}
               </button>
               <button
                 onClick={() => deleteJob(job)}
                 className="rounded-md border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
               >
-                Delete
+                {t("Delete")}
               </button>
             </div>
           </div>
@@ -283,7 +300,7 @@ export default function AdminJobs() {
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 sm:p-8">
             <div className="flex items-center justify-between">
               <h2 className="font-heading text-lg font-semibold text-ink">
-                {editingId ? "Edit Job" : "New Job"}
+                {editingId ? t("Edit Job") : t("New Job")}
               </h2>
               <button onClick={() => setShowForm(false)} className="text-slate hover:text-ink">
                 ✕
@@ -293,7 +310,7 @@ export default function AdminJobs() {
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Title *</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Title")} *</label>
                   <input
                     type="text"
                     required
@@ -304,7 +321,7 @@ export default function AdminJobs() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-ink">
-                    Slug * <span className="text-xs text-slate">(used in the URL)</span>
+                    {t("Slug")} * <span className="text-xs text-slate">{t("(used in the URL)")}</span>
                   </label>
                   <input
                     type="text"
@@ -315,7 +332,7 @@ export default function AdminJobs() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Department *</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Department")} *</label>
                   <input
                     type="text"
                     required
@@ -325,7 +342,7 @@ export default function AdminJobs() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Location *</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Location")} *</label>
                   <input
                     type="text"
                     required
@@ -335,44 +352,56 @@ export default function AdminJobs() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Workplace type *</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Workplace type")} *</label>
                   <select
                     value={form.workplaceType}
                     onChange={(e) => setForm((f) => ({ ...f, workplaceType: e.target.value }))}
                     className="w-full rounded-md border border-black/10 px-3.5 py-2.5 text-sm outline-none focus:border-teal"
                   >
                     {WORKPLACE_TYPES.map((opt) => (
-                      <option key={opt}>{opt}</option>
+                      <option key={opt} value={opt}>{t(opt)}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Job type *</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Job type")} *</label>
                   <select
                     value={form.type}
                     onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
                     className="w-full rounded-md border border-black/10 px-3.5 py-2.5 text-sm outline-none focus:border-teal"
                   >
                     {JOB_TYPES.map((opt) => (
-                      <option key={opt}>{opt}</option>
+                      <option key={opt} value={opt}>{t(opt)}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-ink">Category</label>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Category")}</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                     className="w-full rounded-md border border-black/10 px-3.5 py-2.5 text-sm outline-none focus:border-teal"
                   >
                     {CATEGORIES.map((opt) => (
-                      <option key={opt}>{opt}</option>
+                      <option key={opt} value={opt}>{t(opt)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-ink">{t("Career stage")}</label>
+                  <select
+                    value={form.stage}
+                    onChange={(e) => setForm((f) => ({ ...f, stage: e.target.value }))}
+                    className="w-full rounded-md border border-black/10 px-3.5 py-2.5 text-sm outline-none focus:border-teal"
+                  >
+                    {STAGES.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{t(opt.label)}</option>
                     ))}
                   </select>
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-ink">
-                    Posted label <span className="text-xs text-slate">(e.g. "Posted 2 days ago")</span>
+                    {t("Posted label")} <span className="text-xs text-slate">{t('(e.g. "Posted 2 days ago")')}</span>
                   </label>
                   <input
                     type="text"
@@ -384,7 +413,7 @@ export default function AdminJobs() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-ink">Description *</label>
+                <label className="mb-1.5 block text-sm font-medium text-ink">{t("Description")} *</label>
                 <textarea
                   required
                   rows={3}
@@ -396,7 +425,7 @@ export default function AdminJobs() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-ink">
-                  Responsibilities <span className="text-xs text-slate">(one per line)</span>
+                  {t("Responsibilities")} <span className="text-xs text-slate">{t("(one per line)")}</span>
                 </label>
                 <textarea
                   rows={4}
@@ -408,7 +437,7 @@ export default function AdminJobs() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-ink">
-                  Requirements <span className="text-xs text-slate">(one per line)</span>
+                  {t("Requirements")} <span className="text-xs text-slate">{t("(one per line)")}</span>
                 </label>
                 <textarea
                   rows={4}
@@ -424,7 +453,7 @@ export default function AdminJobs() {
                   checked={form.isOpen}
                   onChange={(e) => setForm((f) => ({ ...f, isOpen: e.target.checked }))}
                 />
-                Job is open (visible on the public site)
+                {t("Job is open (visible on the public site)")}
               </label>
 
               <div className="flex justify-end gap-3 pt-2">
@@ -433,14 +462,14 @@ export default function AdminJobs() {
                   onClick={() => setShowForm(false)}
                   className="rounded-md border border-black/10 px-4 py-2.5 text-sm font-medium text-ink"
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
                   className="rounded-md bg-teal px-5 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
-                  {saving ? "Saving…" : editingId ? "Save changes" : "Create job"}
+                  {saving ? t("Saving…") : editingId ? t("Save changes") : t("Create job")}
                 </button>
               </div>
             </form>

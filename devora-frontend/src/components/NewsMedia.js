@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 /* ---------------- Icons ---------------- */
 
@@ -202,19 +203,20 @@ function MediaContact({ contact }) {
 /* ---------------- Main component ---------------- */
 
 export default function NewsMedia() {
+    const { t, te } = useLanguage();
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/news-media`)
+        apiFetch("news-media")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
             .then(setData)
             .catch((err) =>
-                setError(`Could not load news & media: ${err.message}. Is the backend running on ${API_URL}?`)
+                setError(te("Could not load news & media. Please try again in a moment.", err.message))
             );
     }, []);
 
@@ -281,7 +283,7 @@ export default function NewsMedia() {
 
                     {asSeenIn.length > 0 && (
                         <div className="mt-12 border-t border-white/10 pt-8">
-                            <p className="mb-5 text-[11px] font-medium tracking-widest text-slate/50">AS SEEN IN</p>
+                            <p className="mb-5 text-[11px] font-medium tracking-widest text-slate/50">{t("AS SEEN IN")}</p>
                             <AsSeenIn names={asSeenIn} />
                         </div>
                     )}
@@ -292,7 +294,7 @@ export default function NewsMedia() {
             {pressReleases.length > 0 && (
                 <section className="bg-white px-6 py-16 sm:px-10 sm:py-20 lg:px-14">
                     <div className="mx-auto max-w-3xl">
-                        <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">Press releases</h2>
+                        <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">{t("Press releases")}</h2>
                         <motion.div
                             variants={reduce ? undefined : container}
                             initial={reduce ? undefined : "hidden"}
@@ -316,7 +318,7 @@ export default function NewsMedia() {
             {coverage.length > 0 && (
                 <section className="bg-[#fafafa] px-4 py-16 sm:px-8 sm:py-20 lg:px-12">
                     <div className="mx-auto max-w-6xl">
-                        <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">In the media</h2>
+                        <h2 className="font-heading text-2xl font-bold text-ink sm:text-3xl">{t("In the media")}</h2>
                         <motion.div
                             variants={reduce ? undefined : container}
                             initial={reduce ? undefined : "hidden"}
@@ -336,9 +338,9 @@ export default function NewsMedia() {
             {mediaKit.length > 0 && (
                 <section className="bg-navy px-6 py-16 sm:px-10 sm:py-20 lg:px-14">
                     <div className="mx-auto max-w-4xl">
-                        <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl">Media kit</h2>
+                        <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl">{t("Media kit")}</h2>
                         <p className="mt-2 max-w-xl text-sm text-slate">
-                            Logos, product screenshots, and brand guidelines for press and partners.
+                            {t("Logos, product screenshots, and brand guidelines for press and partners.")}
                         </p>
                         <motion.div
                             variants={reduce ? undefined : container}

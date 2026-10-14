@@ -1,4 +1,5 @@
 const express = require("express");
+const { LISTEN_ON } = require("../data/resources");
 const router = express.Router();
 
 // GET /api/navbar
@@ -55,8 +56,6 @@ router.get("/navbar", (req, res) => {
           { label: "About", href: "/about" },
           { label: "Careers", href: "/careers" },
           { label: "Life at Devora", href: "/life-at-devora" },
-          // { label: "Campus Ambassador", href: "/campus-ambassador" },
-          // { label: "Partner Programme", href: "/partner-programme" },
         ],
       },
     ],
@@ -89,7 +88,7 @@ router.get("/hero", (req, res) => {
             "$ devora ship checkout-flow",
             "> compiling components... done",
             "> running 62 tests... 62 passed",
-            "> live at devora.app/checkout",
+            "> live at devora.com/checkout",
           ],
           progressLabel: "DEPLOY",
           progressValue: 100,
@@ -130,7 +129,6 @@ router.get("/hero", (req, res) => {
         headline: "Why we build slow\nfoundations for\nfast-moving startups.",
         subheadline:
           "Our founder on why the fastest teams are the ones who refuse to cut corners on the boring parts.",
-        // primaryCta: { label: "Listen to the Story", href: "/resources/journal" },
         primaryCta: { label: "Listen to the Story", href: "/resources/journal" },
         visual: { showName: "DEVORA UNSCRIPTED" },
       },
@@ -177,9 +175,47 @@ router.get("/case-studies", (req, res) => {
         bars: [15, 22, 19, 33, 41, 58, 72],
         stat1: { value: "2.3x", label: "Conversion lift" },
         stat2: { value: "180ms", label: "Avg. load time" },
-        href: "/case-studies/fintra-checkout",
+        href: "/resources/case-studies/checkout-flow",
       },
-      // ...more case studies
+      {
+        id: "ledger-reconciliation",
+        client: "Ledger Works",
+        industry: "Fintech",
+        imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop",
+        headline: "Automated reconciliation saved a finance team two days a week",
+        resultValue: "92%",
+        resultLabel: "Matched automatically",
+        bars: [30, 38, 46, 58, 71, 84, 92],
+        stat1: { value: "2 days", label: "Saved weekly" },
+        stat2: { value: "0", label: "Month-end errors" },
+        href: "/resources/case-studies/ledger-reconciliation",
+      },
+      {
+        id: "fieldnote-rebrand",
+        client: "Fieldnote",
+        industry: "Branding",
+        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+        headline: "A rebrand that doubled trial sign-ups",
+        resultValue: "2x",
+        resultLabel: "Trial sign-ups",
+        bars: [18, 24, 30, 41, 52, 66, 80],
+        stat1: { value: "3 weeks", label: "Start to launch" },
+        stat2: { value: "98", label: "Performance score" },
+        href: "/resources/case-studies/fieldnote-rebrand",
+      },
+      {
+        id: "roost-onboarding",
+        client: "Roost",
+        industry: "Marketplace",
+        imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1200&auto=format&fit=crop",
+        headline: "Redesigned onboarding got new hosts listing in minutes",
+        resultValue: "3x",
+        resultLabel: "Activation rate",
+        bars: [14, 20, 29, 37, 50, 63, 76],
+        stat1: { value: "-60%", label: "Time to first listing" },
+        stat2: { value: "4.8", label: "App store rating" },
+        href: "/resources/case-studies/roost-onboarding",
+      },
     ],
   });
 });
@@ -269,13 +305,39 @@ router.get("/portfolio", (req, res) => {
       {
         id: "checkout-flow",
         title: "Checkout Flow Redesign",
-        description: "Cut cart abandonment by 32% with a streamlined 2-step checkout.",
+        description: "Cut cart abandonment in half with a streamlined 2-step checkout.",
         tag: "Web Apps",
         tags: ["Next.js", "Stripe", "UX"],
         imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
-        href: "/case-studies/checkout-flow",
+        href: "/resources/case-studies/checkout-flow",
       },
-      // ...more projects
+      {
+        id: "ledger-reconciliation",
+        title: "Ledger Reconciliation System",
+        description: "Automated nightly matching that saved a finance team two days a week.",
+        tag: "Web Apps",
+        tags: ["Node.js", "MongoDB", "Automation"],
+        imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop",
+        href: "/resources/case-studies/ledger-reconciliation",
+      },
+      {
+        id: "fieldnote-rebrand",
+        title: "Fieldnote Brand & Site",
+        description: "A clearer identity and a faster marketing site that doubled trial sign-ups.",
+        tag: "Branding",
+        tags: ["Branding", "Next.js", "Design system"],
+        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+        href: "/resources/case-studies/fieldnote-rebrand",
+      },
+      {
+        id: "roost-onboarding",
+        title: "Roost Host Onboarding",
+        description: "A guided first-run flow that gets new hosts listing in minutes.",
+        tag: "Product Design",
+        tags: ["UX", "Figma", "Research"],
+        imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1200&auto=format&fit=crop",
+        href: "/resources/case-studies/roost-onboarding",
+      },
     ],
   });
 });
@@ -445,7 +507,7 @@ router.get("/work", (req, res) => {
       heading: "What we build, in practice.",
       subheading:
         "We're a young studio — here's the kind of full-stack and AI work we specialize in, built the same way we'd build yours.",
-      cta: { label: "See the full archive", href: "/work" },
+      cta: { label: "See the full archive", href: "/portfolio" },
       items: [
         {
           id: "ai-assistant",
@@ -544,7 +606,7 @@ router.get("/credentials", (req, res) => {
     ],
     subheading:
       "We stay lean on purpose, but every engineer on the bench is certified on the platforms your product will actually run on.",
-    cta: { label: "Start a Conversation", href: "#contact" },
+    cta: { label: "Start a Conversation", href: "/contact" },
     platforms: [
       { name: "AWS", count: 12, max: 20, description: "Solutions architects and DevOps engineers, cloud-native from day one.", tone: "orange" },
       { name: "Vercel", count: 8, max: 20, description: "Deployment and edge infrastructure built the way the platform intends.", tone: "teal" },
@@ -564,10 +626,11 @@ router.get("/podcasts", (req, res) => {
   res.json({
     eyebrow: "FEATURED CONVERSATIONS",
     heading: "Stories from people actually building things.",
-    cta: { label: "All episodes", href: "/podcasts" },
+    cta: { label: "All episodes", href: "/resources/podcasts" },
     episodes: [
       {
         id: "bootstrapped",
+        href: "/resources/podcasts/bootstrapped",
         show: "BUILD IN PUBLIC",
         title: "Bootstrapping to $1M ARR Without a Single Ad",
         guest: "Layla Hassan",
@@ -579,6 +642,7 @@ router.get("/podcasts", (req, res) => {
       },
       {
         id: "ai-hype",
+        href: "/resources/podcasts/ai-hype",
         show: "DEVORA UNSCRIPTED",
         title: "Why Most AI Features Are Solving the Wrong Problem",
         guest: "Marcus Webb",
@@ -590,6 +654,7 @@ router.get("/podcasts", (req, res) => {
       },
       {
         id: "solo-founder",
+        href: "/resources/podcasts/solo-founder",
         show: "BUILD IN PUBLIC",
         title: "Running a 40k-User Marketplace Solo",
         guest: "Priya Shah",
@@ -601,6 +666,7 @@ router.get("/podcasts", (req, res) => {
       },
       {
         id: "legacy-rescue",
+        href: "/resources/podcasts/legacy-rescue",
         show: "OUT OF SYNC",
         title: "Rescuing a Decade-Old Logistics System",
         guest: "Tomas Reyes",
@@ -619,8 +685,10 @@ router.get("/journal", (req, res) => {
   res.json({
     eyebrow: "FROM THE DEVORA JOURNAL",
     heading: "Essays, breakdowns, and things we learned the hard way",
-    cta: { label: "View all posts", href: "/journal" },
+    cta: { label: "View all posts", href: "/resources/journal" },
     featured: {
+      id: "onboarding-rebuild",
+      href: "/resources/blogs/onboarding-rebuild",
       category: "ENGINEERING",
       title: "We Rebuilt Our Own Onboarding Flow Three Times. Here's What Finally Worked.",
       excerpt:
@@ -636,6 +704,7 @@ router.get("/journal", (req, res) => {
     articles: [
       {
         id: "ai-cost",
+        href: "/resources/blogs/ai-cost",
         category: "AI",
         title: "The Real Cost of Bolting AI Onto a Product That Doesn't Need It",
         readTime: "5 min read",
@@ -643,6 +712,7 @@ router.get("/journal", (req, res) => {
       },
       {
         id: "design-debt",
+        href: "/resources/blogs/design-debt",
         category: "Design",
         title: "Design Debt Is Worse Than Tech Debt, and Nobody Tracks It",
         readTime: "6 min read",
@@ -650,6 +720,7 @@ router.get("/journal", (req, res) => {
       },
       {
         id: "pricing-mvp",
+        href: "/resources/blogs/pricing-mvp",
         category: "Business",
         title: "How We Price Fixed-Scope Sprints Without Guessing",
         readTime: "4 min read",
@@ -657,6 +728,7 @@ router.get("/journal", (req, res) => {
       },
       {
         id: "migration-story",
+        href: "/resources/blogs/migration-story",
         category: "Engineering",
         title: "Migrating a Decade-Old Rails App Without a Feature Freeze",
         readTime: "8 min read",
@@ -664,6 +736,7 @@ router.get("/journal", (req, res) => {
       },
       {
         id: "hiring-seniors",
+        href: "/resources/blogs/hiring-seniors",
         category: "Business",
         title: "Why We Stopped Hiring for 'Culture Fit'",
         readTime: "5 min read",
@@ -671,6 +744,7 @@ router.get("/journal", (req, res) => {
       },
       {
         id: "prompt-arch",
+        href: "/resources/blogs/prompt-arch",
         category: "AI",
         title: "Prompt Architecture Is a Real Engineering Discipline Now",
         readTime: "6 min read",
@@ -702,7 +776,6 @@ router.get("/contact", (req, res) => {
     },
     quickLinks: [
       { icon: "briefcase", title: "Explore Careers", subtitle: "Apply for open roles", href: "/careers" },
-      { icon: "handshake", title: "Partner With Us", subtitle: "Join our partner program", href: "/partners" },
     ],
     form: {
       lookingForOptions: [
@@ -764,7 +837,7 @@ router.get("/about", (req, res) => {
       "We turned down bigger clients to stay a team that still reviews every line of code that goes out the door. That's the trade we'd make again.",
     primaryCta: { label: "Work With Us", href: "/contact" },
     stats: [
-      { value: 34, suffix: "+", label: "Engineers on the bench" },
+      { value: 34, suffix: "", label: "Engineers on the bench" },
       { value: 7, suffix: "", label: "Countries represented" },
       { value: 3, suffix: "", label: "Continents, one team" },
       { value: 7, suffix: "+", label: "Years shipping products" },
@@ -778,7 +851,7 @@ router.get("/insights", (req, res) => {
   res.json({
     eyebrow: "FROM THE DEVORA JOURNAL",
     heading: "Things we've been thinking about.",
-    viewAllHref: "/blog",
+    viewAllHref: "/resources/blogs",
     items: [
       {
         id: "ai-noise",
@@ -787,7 +860,7 @@ router.get("/insights", (req, res) => {
         title: "Where AI actually helps, and where it's just noise",
         description: "The workflows where AI creates real leverage — and the ones where it only adds friction.",
         cta: "Read the article",
-        href: "/blog/where-ai-actually-helps",
+        href: "/resources/blogs",
         image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
       },
       {
@@ -797,7 +870,7 @@ router.get("/insights", (req, res) => {
         title: "A founder's guide to briefing a dev shop",
         description: "What to bring to the first call so week one is building, not guessing.",
         cta: "Read the guide",
-        href: "/blog/briefing-a-dev-shop",
+        href: "/resources/blogs",
         image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop",
       },
       {
@@ -807,7 +880,7 @@ router.get("/insights", (req, res) => {
         title: "Why we build the boring parts first",
         description: "Auth, deploys, and error handling aren't glamorous — but they're what keeps a fast-moving product from breaking.",
         cta: "Read the article",
-        href: "/blog/boring-parts-first",
+        href: "/resources/blogs",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
       },
     ],
@@ -874,7 +947,7 @@ router.get("/values", (req, res) => {
       heading: "How we work with you",
       description:
         "A short, plain-language document covering how we handle your data, your deadlines, and your money — no legal jargon required.",
-      cta: { label: "Read how we work", href: "/how-we-work" },
+      cta: { label: "Read how we work", href: "/process" },
     },
   });
 });
@@ -890,11 +963,11 @@ router.get("/career", (req, res) => {
     subheadline:
       "Devora is a small studio, on purpose. Every engineer and designer here owns real product decisions from day one, working directly with the founders and the clients — not routed through five layers of process.",
     primaryCta: { label: "See open roles", href: "/careers/roles" },
-    secondaryCta: { label: "Watch how we work", href: "#story" },
+    secondaryCta: { label: "See how we hire", href: "/careers/roles" },
     stats: [
-      { value: "18+", label: "Engineers & designers" },
-      { value: "9", label: "Countries represented" },
-      { value: "6", label: "Years, zero layoffs" },
+      { value: "34", label: "Engineers on the bench" },
+      { value: "7", label: "Countries represented" },
+      { value: "7", label: "Years, zero layoffs" },
     ],
     growthCard: {
       title: "Career paths that flex with you",
@@ -1077,9 +1150,9 @@ router.get("/inclusion-stats", (req, res) => {
     subheading:
       "We're building a studio where the ladder above looks the same regardless of where you started. Here's where we stand today, and what we're working on next.",
     stats: [
-      { value: "40+", label: "Women in technical roles" },
-      { value: "9+", label: "Nationalities represented" },
-      { value: "85+", label: "Employees in L&D sessions yearly" },
+      { value: "14", label: "Women in technical roles" },
+      { value: "7", label: "Nationalities represented" },
+      { value: "34", label: "Employees in L&D sessions yearly" },
       { value: "100%", label: "Pay equity across genders" },
     ],
   });
@@ -1113,363 +1186,6 @@ router.get("/hiring-process", (req, res) => {
       },
     ],
   });
-});
-
-// GET /api/open-roles
-router.get("/open-roles", (req, res) => {
-  res.json({
-    tag: "Open roles",
-    heading: "Find your next role at Devora",
-    filters: ["All", "Engineering", "AI & Data", "Design", "Cloud & DevOps"],
-    ctaLabel: "Explore positions",
-    ctaHref: "/careers/roles",
-    roles: [
-      {
-        slug: "senior-full-stack-developer",
-        title: "Senior Full-Stack Developer",
-        postedAgo: "Posted 2 days ago",
-        location: "On-site",
-        place: "Lahore, Punjab, Pakistan",
-        team: "Full-Stack Development",
-        type: "Full-time",
-        category: "Engineering",
-      },
-      {
-        slug: "frontend-engineer-web-development",
-        title: "Frontend Engineer — Web Development",
-        postedAgo: "Posted 3 days ago",
-        location: "Hybrid",
-        place: "Lahore, Punjab, Pakistan",
-        team: "Web Development",
-        type: "Full-time",
-        category: "Engineering",
-      },
-      {
-        slug: "ai-llm-solutions-engineer",
-        title: "AI/LLM Solutions Engineer",
-        postedAgo: "Posted 5 days ago",
-        location: "Remote",
-        place: "Pakistan",
-        team: "AI & LLM Solutions",
-        type: "Full-time",
-        category: "AI & Data",
-      },
-      {
-        slug: "product-engineer-saas-platforms",
-        title: "Product Engineer — SaaS Platforms",
-        postedAgo: "Posted 6 days ago",
-        location: "On-site",
-        place: "Lahore, Punjab, Pakistan",
-        team: "SaaS & Product Development",
-        type: "Full-time",
-        category: "Engineering",
-      },
-      {
-        slug: "ecommerce-developer-shopify",
-        title: "E-Commerce Developer (Shopify)",
-        postedAgo: "Posted 8 days ago",
-        location: "On-site",
-        place: "Lahore, Punjab, Pakistan",
-        team: "E-Commerce Development",
-        type: "Full-time",
-        category: "Engineering",
-      },
-      {
-        slug: "product-designer-design-systems",
-        title: "Product Designer — Design Systems",
-        postedAgo: "Posted 9 days ago",
-        location: "Hybrid",
-        place: "Lahore, Punjab, Pakistan",
-        team: "UI/UX & Design Systems",
-        type: "Full-time",
-        category: "Design",
-      },
-      {
-        slug: "devops-engineer",
-        title: "DevOps Engineer",
-        postedAgo: "Posted 11 days ago",
-        location: "Remote",
-        place: "Pakistan",
-        team: "Cloud & DevOps",
-        type: "Full-time",
-        category: "Cloud & DevOps",
-      },
-      {
-        slug: "integrations-engineer-apis",
-        title: "Integrations Engineer — APIs",
-        postedAgo: "Posted 13 days ago",
-        location: "On-site",
-        place: "Lahore, Punjab, Pakistan",
-        team: "API & Integrations",
-        type: "Contract",
-        category: "Engineering",
-      },
-    ],
-  });
-});
-
-// GET /api/all-roles
-router.get("/all-roles", (req, res) => {
-  res.json({
-    heading: "Careers at Devora",
-    subheading:
-      "We're building product teams for startups and enterprises worldwide. Here's what we're currently hiring for.",
-    listHeading: "Job Openings",
-    roles: [
-      { slug: "senior-full-stack-developer", title: "Senior Full-Stack Developer", postedAgo: "Posted 2 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "Full-Stack Development", type: "Full-time" },
-      { slug: "frontend-engineer-web-development", title: "Frontend Engineer — Web Development", postedAgo: "Posted 3 days ago", workplaceType: "Hybrid", location: "Lahore, Punjab, Pakistan", department: "Web Development", type: "Full-time" },
-      { slug: "ai-llm-solutions-engineer", title: "AI/LLM Solutions Engineer", postedAgo: "Posted 5 days ago", workplaceType: "Remote", location: "Pakistan", department: "AI & LLM Solutions", type: "Full-time" },
-      { slug: "product-engineer-saas-platforms", title: "Product Engineer — SaaS Platforms", postedAgo: "Posted 6 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "SaaS & Product Development", type: "Full-time" },
-      { slug: "ecommerce-developer-shopify", title: "E-Commerce Developer (Shopify)", postedAgo: "Posted 8 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "E-Commerce Development", type: "Full-time" },
-      { slug: "product-designer-design-systems", title: "Product Designer — Design Systems", postedAgo: "Posted 9 days ago", workplaceType: "Hybrid", location: "Lahore, Punjab, Pakistan", department: "UI/UX & Design Systems", type: "Full-time" },
-      { slug: "devops-engineer", title: "DevOps Engineer", postedAgo: "Posted 11 days ago", workplaceType: "Remote", location: "Pakistan", department: "Cloud & DevOps", type: "Full-time" },
-      { slug: "integrations-engineer-apis", title: "Integrations Engineer — APIs", postedAgo: "Posted 13 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "API & Integrations", type: "Contract" },
-      { slug: "qa-automation-engineer", title: "QA Automation Engineer", postedAgo: "Posted 15 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "Full-Stack Development", type: "Full-time" },
-      { slug: "backend-engineer-nodejs", title: "Backend Engineer — Node.js", postedAgo: "Posted 17 days ago", workplaceType: "Hybrid", location: "Lahore, Punjab, Pakistan", department: "Web Development", type: "Full-time" },
-      { slug: "junior-frontend-developer", title: "Junior Frontend Developer", postedAgo: "Posted 19 days ago", workplaceType: "On-site", location: "Lahore, Punjab, Pakistan", department: "Web Development", type: "Full-time" },
-    ],
-  });
-});
-
-// GET /api/roles/:slug
-const ROLE_DETAILS = {
-  "senior-full-stack-developer": {
-    title: "Senior Full-Stack Developer",
-    workplaceType: "On-site",
-    type: "Full-time",
-    department: "Full-Stack Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "Devora is looking for a Senior Full-Stack Developer to build and scale product features end to end, from data models to the interface, for our client and internal platforms.",
-    responsibilities: [
-      "Design, build, and ship features across the stack using Next.js, Node.js, and PostgreSQL",
-      "Own architecture decisions for the projects you lead, and review the decisions of others",
-      "Work directly with designers and clients to turn specs into shipped, tested code",
-      "Improve build performance, test coverage, and deployment reliability over time",
-    ],
-    requirements: [
-      "4+ years of professional full-stack development experience",
-      "Strong command of React/Next.js and a Node.js backend framework",
-      "Comfortable owning a feature from spec through production monitoring",
-      "Experience with relational databases and basic infrastructure (CI/CD, containers)",
-    ],
-  },
-  "frontend-engineer-web-development": {
-    title: "Frontend Engineer — Web Development",
-    workplaceType: "Hybrid",
-    type: "Full-time",
-    department: "Web Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "We're hiring a Frontend Engineer to build fast, accessible marketing sites and web apps for Devora's clients, working closely with design from the first wireframe to launch.",
-    responsibilities: [
-      "Build responsive interfaces in React/Next.js from Figma designs",
-      "Implement animation and interaction details that match the design intent",
-      "Optimize for Core Web Vitals and cross-browser consistency",
-      "Pair with backend engineers to wire up real data and forms",
-    ],
-    requirements: [
-      "2+ years building production web interfaces",
-      "Strong CSS fundamentals and comfort with a utility framework like Tailwind",
-      "Experience turning a static design into a fully responsive build",
-      "An eye for the small details that make an interface feel finished",
-    ],
-  },
-  "ai-llm-solutions-engineer": {
-    title: "AI/LLM Solutions Engineer",
-    workplaceType: "Remote",
-    type: "Full-time",
-    department: "AI & LLM Solutions",
-    location: "Pakistan",
-    description:
-      "Join Devora's AI practice to design and ship LLM-powered features for client products — from prompt design to production-grade retrieval pipelines.",
-    responsibilities: [
-      "Design and evaluate prompting strategies and retrieval pipelines for client use cases",
-      "Integrate LLM APIs into production applications with proper monitoring and fallbacks",
-      "Work with clients to scope what's actually feasible with current model capabilities",
-      "Keep the team current on new models, tooling, and techniques worth adopting",
-    ],
-    requirements: [
-      "Hands-on experience building with LLM APIs (OpenAI, Anthropic, or similar) in production",
-      "Solid Python or TypeScript skills",
-      "Understanding of RAG, embeddings, and evaluation methods for generative systems",
-      "Comfortable explaining trade-offs to non-technical stakeholders",
-    ],
-  },
-  "product-engineer-saas-platforms": {
-    title: "Product Engineer — SaaS Platforms",
-    workplaceType: "On-site",
-    type: "Full-time",
-    department: "SaaS & Product Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "We're looking for a Product Engineer to help build Devora's own SaaS products end to end — from customer interviews to shipped features.",
-    responsibilities: [
-      "Build multi-tenant SaaS features covering billing, permissions, and onboarding flows",
-      "Talk directly to users to validate what's worth building next",
-      "Balance speed of iteration with the stability paying customers expect",
-      "Contribute to product strategy, not just implementation",
-    ],
-    requirements: [
-      "3+ years building and shipping SaaS products",
-      "Experience with subscription billing and multi-tenant architecture",
-      "Comfortable moving between product thinking and hands-on code",
-      "Bias toward shipping and iterating over long planning cycles",
-    ],
-  },
-  "ecommerce-developer-shopify": {
-    title: "E-Commerce Developer (Shopify)",
-    workplaceType: "On-site",
-    type: "Full-time",
-    department: "E-Commerce Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "Build and customize Shopify storefronts and apps for Devora's e-commerce clients, from theme development to checkout and app integrations.",
-    responsibilities: [
-      "Develop custom Shopify themes and sections using Liquid, React, and the Storefront API",
-      "Build and maintain Shopify apps for client-specific workflows",
-      "Optimize storefronts for page speed and conversion",
-      "Troubleshoot integration issues with payment and fulfillment providers",
-    ],
-    requirements: [
-      "2+ years of Shopify theme or app development",
-      "Working knowledge of Liquid, JavaScript, and the Shopify Admin/Storefront APIs",
-      "Experience with at least one other e-commerce platform is a plus",
-      "Comfortable working directly with merchant clients",
-    ],
-  },
-  "product-designer-design-systems": {
-    title: "Product Designer — Design Systems",
-    workplaceType: "Hybrid",
-    type: "Full-time",
-    department: "UI/UX & Design Systems",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "We're looking for a Product Designer to own and grow Devora's design system, and to bring that same rigor to client work across the studio.",
-    responsibilities: [
-      "Maintain and extend Devora's shared component library and design tokens",
-      "Design end-to-end flows for client products, from wireframe to high-fidelity",
-      "Partner with engineers to make sure designs ship as intended",
-      "Run lightweight usability checks before features go live",
-    ],
-    requirements: [
-      "3+ years of product design experience, ideally with a design system background",
-      "Strong Figma skills, including component and variant management",
-      "Comfortable presenting and defending design decisions to clients",
-      "Some understanding of frontend implementation constraints",
-    ],
-  },
-  "devops-engineer": {
-    title: "DevOps Engineer",
-    workplaceType: "Remote",
-    type: "Full-time",
-    department: "Cloud & DevOps",
-    location: "Pakistan",
-    description:
-      "Help Devora's engineering teams ship faster and more safely by owning our CI/CD pipelines, cloud infrastructure, and monitoring.",
-    responsibilities: [
-      "Design and maintain CI/CD pipelines across multiple client projects",
-      "Manage cloud infrastructure on AWS/GCP using infrastructure as code",
-      "Set up monitoring, alerting, and incident response practices",
-      "Work with engineering teams to remove deployment friction",
-    ],
-    requirements: [
-      "3+ years in a DevOps or infrastructure engineering role",
-      "Experience with Terraform or similar IaC tooling",
-      "Strong Linux fundamentals and container orchestration experience",
-      "Comfortable being the on-call point of contact for infrastructure issues",
-    ],
-  },
-  "integrations-engineer-apis": {
-    title: "Integrations Engineer — APIs",
-    workplaceType: "On-site",
-    type: "Contract",
-    department: "API & Integrations",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "Build and maintain the integrations that connect client systems together — payment gateways, CRMs, and internal APIs.",
-    responsibilities: [
-      "Design and build REST/GraphQL APIs for internal and client-facing use",
-      "Integrate third-party services (payments, CRMs, messaging platforms) into client products",
-      "Write clear API documentation for other engineers and clients",
-      "Handle authentication, rate limiting, and error handling correctly the first time",
-    ],
-    requirements: [
-      "2+ years building and consuming APIs in production",
-      "Experience with OAuth and API authentication patterns",
-      "Comfortable reading third-party API docs and working around their limitations",
-      "Contract engagement, with the possibility of extension",
-    ],
-  },
-  "qa-automation-engineer": {
-    title: "QA Automation Engineer",
-    workplaceType: "On-site",
-    type: "Full-time",
-    department: "Full-Stack Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "Help Devora ship with confidence by building automated test coverage across our client projects and internal tools.",
-    responsibilities: [
-      "Design and maintain automated test suites (unit, integration, end-to-end)",
-      "Set up test pipelines that run on every pull request",
-      "Work with engineers to catch regressions before they reach production",
-      "Track and report on quality metrics across projects",
-    ],
-    requirements: [
-      "2+ years in QA automation, with real ownership of a test suite",
-      "Experience with a modern e2e framework (Playwright, Cypress, or similar)",
-      "Comfortable reading application code to understand what to test",
-      "Detail-oriented, without slowing the team down unnecessarily",
-    ],
-  },
-  "backend-engineer-nodejs": {
-    title: "Backend Engineer — Node.js",
-    workplaceType: "Hybrid",
-    type: "Full-time",
-    department: "Web Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "Build reliable backend services for Devora's client projects, from API design to database schema to production monitoring.",
-    responsibilities: [
-      "Design and build REST/GraphQL APIs using Node.js and Express or a similar framework",
-      "Model and optimize relational and document database schemas",
-      "Write tests and monitoring that catch problems before customers do",
-      "Collaborate with frontend engineers on API contracts",
-    ],
-    requirements: [
-      "2+ years of backend development in Node.js",
-      "Comfortable designing a database schema from a product spec",
-      "Understanding of authentication, caching, and API security basics",
-      "Can explain technical trade-offs clearly to non-engineers",
-    ],
-  },
-  "junior-frontend-developer": {
-    title: "Junior Frontend Developer",
-    workplaceType: "On-site",
-    type: "Full-time",
-    department: "Web Development",
-    location: "Lahore, Punjab, Pakistan",
-    description:
-      "A great entry point into professional frontend development — you'll work alongside senior engineers on real client projects from day one.",
-    responsibilities: [
-      "Build UI components from Figma designs under senior engineer guidance",
-      "Fix bugs and small features in existing client codebases",
-      "Learn our React/Next.js conventions and testing practices",
-      "Take part in code review, both giving and receiving feedback",
-    ],
-    requirements: [
-      "0–1 years of professional experience, or strong personal/academic projects",
-      "Solid HTML, CSS, and JavaScript fundamentals",
-      "Some exposure to React",
-      "Eager to learn and take feedback well",
-    ],
-  },
-};
-
-router.get("/roles/:slug", (req, res) => {
-  const role = ROLE_DETAILS[req.params.slug];
-  if (!role) return res.status(404).json({ error: "Role not found" });
-  res.json(role);
 });
 
 // GET /api/life-at-devora-hero
@@ -1551,9 +1267,9 @@ router.get("/workforce-diversity", (req, res) => {
         heading: "Who makes up the floor",
         subheading: "A snapshot of who we are today, updated annually alongside our DEI commitments.",
         stats: [
-            { value: "1,200+", label: "Diverse tech team across regions & cultures" },
-            { value: "5+", label: "Nationalities represented" },
-            { value: "100+", label: "Women representation in engineering" },
+            { value: "34", label: "Diverse tech team across regions & cultures" },
+            { value: "7", label: "Nationalities represented" },
+            { value: "40%", label: "Women representation in engineering" },
             { value: "100%", label: "Pay equity across genders" },
         ],
     });
@@ -1571,84 +1287,16 @@ router.get("/life-cta", (req, res) => {
 });
 
 
-// GET /api/journal
-router.get("/journal", (req, res) => {
-  res.json({
-    meta: {
-      eyebrow: "FROM THE DEVORA JOURNAL",
-      title: "Why we build slow foundations\nfor fast-moving startups.",
-      subtitle: "Our founder on why the fastest teams are the ones who refuse to cut corners on the boring parts.",
-      author: "Alex Rivera, Founder",
-      publishedAt: "Sep 12, 2026",
-      duration: "24 min listen",
-      showName: "DEVORA UNSCRIPTED",
-    },
-    waveform: [12, 18, 9, 24, 30, 14, 20, 8, 26, 16, 22, 11],
-    listenOn: [
-      { id: "spotify", label: "Spotify", href: "#" },
-      { id: "apple", label: "Apple Podcasts", href: "#" },
-      { id: "youtube", label: "YouTube", href: "#" },
-    ],
-    keyTakeaways: [
-      "Fast teams aren't the ones skipping steps — they're the ones who never revisit finished work.",
-      "A design system isn't overhead, it's the thing that prevents overhead later.",
-      "Technical debt compounds faster than most founders expect in the first 6 months.",
-    ],
-    sections: [
-      {
-        id: "intro",
-        heading: "The myth of moving fast",
-        paragraphs: [
-          "Every founder we talk to wants speed. Fewer of them ask what speed actually costs...",
-          "Second paragraph here...",
-        ],
-        pullQuote: { quote: "Speed without a foundation is just borrowed time.", attribution: "Alex Rivera" },
-      },
-      {
-        id: "foundations",
-        heading: "What a 'boring' foundation buys you",
-        paragraphs: ["..."],
-        statCallout: [
-          { value: "3x", label: "Slower feature velocity after 6 months without a design system" },
-          { value: "60%", label: "Of eng time in unstructured codebases goes to rework" },
-          { value: "2 wks", label: "Avg. time saved per feature with a mature component library" },
-        ],
-      },
-      // ...more sections
-    ],
-    transcript: [
-      { time: "00:00", speaker: "Alex Rivera", text: "So the thing nobody tells early-stage founders..." },
-      { time: "00:42", speaker: "Host", text: "Right, and that's the tension, isn't it?" },
-    ],
-    author: {
-      name: "Alex Rivera",
-      role: "Founder, Devora",
-      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop",
-      bio: "Alex has spent a decade building product teams at early-stage startups before founding Devora.",
-    },
-    relatedEpisodes: [
-      {
-        id: "ep2",
-        title: "How to hire your first design partner",
-        excerpt: "What to look for before your first full-time design hire.",
-        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
-        duration: "18 min",
-        href: "/resources/hiring-design",
-      },
-      // ...more
-    ],
-  });
-});
-
 // GET /api/blogs
 router.get("/blogs", (req, res) => {
   res.json({
     eyebrow: "INSIGHTS & UPDATES",
     heading: "Ideas on design, engineering,\nand building without breaking things.",
     subheading: "Notes from the team on what we're building, learning, and rethinking.",
-    categories: ["Engineering", "Design", "Product", "Culture"],
+    categories: ["Engineering", "Design", "Product", "Culture", "AI", "Business"],
     featured: {
       id: "design-systems-2026",
+      href: "/resources/blogs/design-systems-2026",
       title: "Why every fast-moving startup needs a design system by month 3",
       excerpt: "The cost of skipping this step doesn't show up immediately — it shows up in month six, in every sprint after.",
       imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
@@ -1656,11 +1304,11 @@ router.get("/blogs", (req, res) => {
       author: "Alex Rivera",
       date: "Sep 18, 2026",
       readTime: "6 min read",
-      href: "/resources/blogs/design-systems-2026",
     },
     posts: [
       {
         id: "async-first-teams",
+        href: "/resources/blogs/async-first-teams",
         title: "What async-first actually means (it's not just Slack)",
         excerpt: "Async isn't a communication style, it's an architecture decision for how your team makes decisions.",
         imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
@@ -1668,24 +1316,95 @@ router.get("/blogs", (req, res) => {
         author: "Jamie Chen",
         date: "Sep 10, 2026",
         readTime: "4 min read",
-        href: "/resources/blogs/async-first-teams",
       },
-      // ...more posts
+      {
+        id: "onboarding-rebuild",
+        href: "/resources/blogs/onboarding-rebuild",
+        title: "We Rebuilt Our Own Onboarding Flow Three Times. Here's What Finally Worked.",
+        excerpt: "Two failed rewrites taught us more about our own product than either of the successful launches did.",
+        imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop",
+        tag: "Engineering",
+        author: "Dana Ferreira",
+        date: "Aug 14, 2026",
+        readTime: "7 min read",
+      },
+      {
+        id: "ai-cost",
+        href: "/resources/blogs/ai-cost",
+        title: "The Real Cost of Bolting AI Onto a Product That Doesn't Need It",
+        excerpt: "An AI feature is never free. Here is how to count what it really costs before you build it.",
+        imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1600&auto=format&fit=crop",
+        tag: "AI",
+        author: "Sam Okafor",
+        date: "Aug 2, 2026",
+        readTime: "5 min read",
+      },
+      {
+        id: "design-debt",
+        href: "/resources/blogs/design-debt",
+        title: "Design Debt Is Worse Than Tech Debt, and Nobody Tracks It",
+        excerpt: "Engineers keep a backlog of tech debt. Almost nobody keeps one for inconsistent, confusing, or outdated design.",
+        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop",
+        tag: "Design",
+        author: "Priya Nair",
+        date: "Jul 26, 2026",
+        readTime: "6 min read",
+      },
+      {
+        id: "pricing-mvp",
+        href: "/resources/blogs/pricing-mvp",
+        title: "How We Price Fixed-Scope Sprints Without Guessing",
+        excerpt: "A fixed price only works if the scope is honest. This is how we make it honest before anyone signs.",
+        imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1600&auto=format&fit=crop",
+        tag: "Business",
+        author: "Alex Rivera",
+        date: "Jul 19, 2026",
+        readTime: "4 min read",
+      },
+      {
+        id: "migration-story",
+        href: "/resources/blogs/migration-story",
+        title: "Migrating a Decade-Old Rails App Without a Feature Freeze",
+        excerpt: "Stopping all new work for a migration is rarely an option. Here is how we kept shipping while the foundation changed.",
+        imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop",
+        tag: "Engineering",
+        author: "Dana Ferreira",
+        date: "Jul 10, 2026",
+        readTime: "8 min read",
+      },
+      {
+        id: "hiring-seniors",
+        href: "/resources/blogs/hiring-seniors",
+        title: "Why We Stopped Hiring for 'Culture Fit'",
+        excerpt: "'Fit' quietly selects for people who are just like us. We replaced it with something more useful.",
+        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop",
+        tag: "Business",
+        author: "Jamie Chen",
+        date: "Jun 30, 2026",
+        readTime: "5 min read",
+      },
+      {
+        id: "prompt-arch",
+        href: "/resources/blogs/prompt-arch",
+        title: "Prompt Architecture Is a Real Engineering Discipline Now",
+        excerpt: "Prompts that grow by accident become the new unmaintainable legacy code. Structure them on purpose.",
+        imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1600&auto=format&fit=crop",
+        tag: "AI",
+        author: "Sam Okafor",
+        date: "Jun 21, 2026",
+        readTime: "6 min read",
+      },
     ],
   });
 });
 
-// GET /api/podcasts
-router.get("/podcasts", (req, res) => {
+// GET /api/podcast-index
+router.get("/podcast-index", (req, res) => {
   res.json({
     eyebrow: "DEVORA UNSCRIPTED",
     heading: "Conversations on building\nwithout cutting corners.",
     subheading: "Founders, engineers, and designers talking through the decisions that actually mattered.",
-    listenOn: [
-      { id: "spotify", label: "Spotify", href: "#" },
-      { id: "apple", label: "Apple Podcasts", href: "#" },
-      { id: "youtube", label: "YouTube", href: "#" },
-    ],
+    listenOn: LISTEN_ON,
     categories: ["Engineering", "Founders", "Design"],
     featured: {
       id: "slow-foundations",
@@ -1701,6 +1420,7 @@ router.get("/podcasts", (req, res) => {
     episodes: [
       {
         id: "hiring-design",
+        href: "/resources/podcasts/hiring-design",
         episodeNumber: 11,
         title: "How to hire your first design partner",
         excerpt: "What to look for before your first full-time design hire.",
@@ -1708,9 +1428,51 @@ router.get("/podcasts", (req, res) => {
         duration: "18 min",
         waveform: [10, 22, 14, 28, 18, 24, 12, 20],
         tag: "Design",
-        href: "/resources/podcasts/hiring-design",
       },
-      // ...more episodes
+      {
+        id: "bootstrapped",
+        href: "/resources/podcasts/bootstrapped",
+        episodeNumber: 10,
+        title: "Bootstrapping to $1M ARR Without a Single Ad",
+        excerpt: "Layla walks through how Fieldnote reached its first million in annual revenue using only customer conversations, a niche community, and patience.",
+        imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1600&auto=format&fit=crop",
+        duration: "38 min",
+        waveform: [16, 24, 12, 28, 20, 10, 26, 14],
+        tag: "Founders",
+      },
+      {
+        id: "ai-hype",
+        href: "/resources/podcasts/ai-hype",
+        episodeNumber: 9,
+        title: "Why Most AI Features Are Solving the Wrong Problem",
+        excerpt: "Marcus has shipped and killed more AI features than he can count. He shares how to tell a useful one from an expensive demo.",
+        imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1600&auto=format&fit=crop",
+        duration: "44 min",
+        waveform: [12, 20, 26, 14, 30, 18, 10, 22],
+        tag: "Engineering",
+      },
+      {
+        id: "solo-founder",
+        href: "/resources/podcasts/solo-founder",
+        episodeNumber: 8,
+        title: "Running a 40k-User Marketplace Solo",
+        excerpt: "Priya runs a marketplace with tens of thousands of users on her own. She explains what she automated, what she refuses to, and where she asks for help.",
+        imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1600&auto=format&fit=crop",
+        duration: "29 min",
+        waveform: [20, 10, 24, 16, 28, 12, 22, 18],
+        tag: "Founders",
+      },
+      {
+        id: "legacy-rescue",
+        href: "/resources/podcasts/legacy-rescue",
+        episodeNumber: 7,
+        title: "Rescuing a Decade-Old Logistics System",
+        excerpt: "Tomas inherited ten years of undocumented code that moved real freight every day. This is how his team made it safe to change.",
+        imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1600&auto=format&fit=crop",
+        duration: "51 min",
+        waveform: [14, 26, 18, 10, 24, 30, 16, 12],
+        tag: "Engineering",
+      },
     ],
   });
 });
@@ -1728,9 +1490,8 @@ router.get("/research-guides", (req, res) => {
       description: "A step-by-step framework for building a design system that survives contact with a real product team.",
       imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
       tag: "Design",
-      pages: 32,
+      pages: 4,
       format: "PDF",
-      href: "/downloads/design-system-playbook.pdf",
     },
     guides: [
       {
@@ -1739,11 +1500,9 @@ router.get("/research-guides", (req, res) => {
         description: "How to structure decisions, docs, and standups for a team that isn't all online at once.",
         imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
         tag: "Growth",
-        pages: 18,
+        pages: 4,
         format: "PDF",
-        href: "/downloads/async-first-handbook.pdf",
       },
-      // ...more guides
     ],
   });
 });
@@ -1757,13 +1516,12 @@ router.get("/news-media", (req, res) => {
     asSeenIn: ["TechCrunch", "The Next Web", "Product Hunt", "Indie Hackers"],
     pressReleases: [
       {
-        id: "series-a",
+        id: "seed-round",
+        href: "/resources/news-media/seed-round",
         date: "SEP 2, 2026",
         title: "Devora raises seed round to expand embedded product teams",
         excerpt: "The round will fund three new embedded teams and a research arm focused on design systems tooling.",
-        href: "/news-media/seed-round",
       },
-      // ...more releases
     ],
     coverage: [
       {
@@ -1773,19 +1531,18 @@ router.get("/news-media", (req, res) => {
         excerpt: "A look at how Devora's model differs from a traditional agency.",
         date: "Aug 14, 2026",
         imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
-        href: "https://techcrunch.com/...",
+        href: "https://techcrunch.com",
       },
-      // ...more coverage
     ],
     mediaKit: [
-      { id: "logo-pack", title: "Logo pack (SVG + PNG)", format: "ZIP", fileSize: "2.4 MB", href: "/downloads/devora-logos.zip" },
-      { id: "brand-guidelines", title: "Brand guidelines", format: "PDF", fileSize: "1.1 MB", href: "/downloads/devora-brand-guidelines.pdf" },
-      { id: "screenshots", title: "Product screenshots", format: "ZIP", fileSize: "8.7 MB", href: "/downloads/devora-screenshots.zip" },
+      { id: "logo-pack", title: "Logo pack (SVG + PNG)", format: "ZIP", fileSize: "98 KB", href: "/downloads/devora-logos.zip" },
+      { id: "brand-guidelines", title: "Brand guidelines", format: "PDF", fileSize: "6 KB", href: "/downloads/devora-brand-guidelines.pdf" },
+      { id: "screenshots", title: "Product screenshots", format: "ZIP", fileSize: "101 KB", href: "/downloads/devora-screenshots.zip" },
     ],
     contact: {
       name: "Jordan Lee",
       role: "Press & Communications",
-      email: "press@devora.app",
+      email: process.env.PRESS_EMAIL || process.env.ADMIN_NOTIFY_EMAIL || "press@devora.com",
       avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop",
     },
   });

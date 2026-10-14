@@ -6,6 +6,7 @@ import ServiceOfferings from "@/components/services/ServiceOfferings";
 import ServiceProcess from "@/components/services/ServiceProcess";
 import ServiceTechStack from "@/components/services/ServiceTechStack";
 import ServiceWhy from "@/components/services/ServiceWhy";
+import ServiceRelatedWork from "@/components/services/ServiceRelatedWork";
 import ServiceFaq from "@/components/services/ServiceFaq";
 import ServiceCta from "@/components/services/ServiceCta";
 import { getAllServices, getService } from "@/data/services";
@@ -38,6 +39,7 @@ export default async function ServicePage({ params }) {
         <ServiceProcess service={service} />
         <ServiceTechStack service={service} />
         <ServiceWhy service={service} />
+        <ServiceRelatedWork service={service} />
         <ServiceFaq service={service} />
         <ServiceCta service={service} />
       </main>

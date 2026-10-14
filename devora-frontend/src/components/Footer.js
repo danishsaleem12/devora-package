@@ -4,6 +4,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
 /**
  * Footer.js
@@ -13,10 +16,9 @@ import Link from "next/link";
  *
  * FALLBACK_MENUS mirrors your content.route.js /navbar payload exactly, so the
  * footer still renders correctly on first paint (or if the API call fails) —
- * swap API_BASE below for your real host if it isn't same-origin.
+ * the backend host comes from NEXT_PUBLIC_API_URL (see src/lib/api.js).
  */
 
-const API_BASE = ""; // e.g. "http://localhost:5000" — leave "" if same-origin
 
 const FALLBACK_MENUS = [
   {
@@ -68,34 +70,21 @@ const FALLBACK_MENUS = [
       { label: "About", href: "/about" },
       { label: "Careers", href: "/careers" },
       { label: "Life at Devora", href: "/life-at-devora" },
-      // { label: "Campus Ambassador", href: "/campus-ambassador" },
-      // { label: "Partner Programme", href: "/partner-programme" },
     ],
   },
 ];
 
+// Set the real accounts in src/lib/site.js (env vars). Anything left empty is not shown.
 const SOCIALS = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/m-danish-489a8b259",
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/danishsaleem12",
-  },
-  {
-    label: "WhatsApp",
-    href:
-      "https://wa.me/923186039286?text=" +
-      encodeURIComponent("Hi! I found you through the Devora website and I'd like to talk about a project."),
-  },
+  { label: "LinkedIn", href: LINKEDIN_URL },
+  { label: "GitHub", href: GITHUB_URL },
   {
     label: "Email",
-    href:
-      "mailto:mdanishsaleem52@gmail.com?subject=" +
-      encodeURIComponent("Project enquiry from the Devora website"),
+    href: `mailto:${CONTACT_EMAIL}?subject=`,
+    // translated with t() and appended to href when the link is rendered
+    message: "Project enquiry from the Devora website",
   },
-];
+].filter((s) => s.href);
 
 function ChevronIcon({ open }) {
   return (
@@ -163,7 +152,8 @@ function FooterColumn({ label, items, isOpen, onToggle }) {
 }
 
 export default function Footer() {
-  const [menus, setMenus] = useState(FALLBACK_MENUS);
+  const { t, tr } = useLanguage();
+  const [menus, setMenus] = useState(null); // null = still showing the built-in fallback menus
   const [openIndexes, setOpenIndexes] = useState(() => new Set(FALLBACK_MENUS.map((_, i) => i)));
 
   useEffect(() => {
@@ -171,7 +161,7 @@ export default function Footer() {
 
     async function load() {
       try {
-        const navRes = await fetch(`${API_BASE}/api/navbar`);
+        const navRes = await apiFetch("navbar");
         const navData = await navRes.json();
         if (!cancelled) {
           if (Array.isArray(navData?.menus) && navData.menus.length) {
@@ -203,13 +193,14 @@ export default function Footer() {
   }
 
   const year = new Date().getFullYear();
+  const shownMenus = menus ?? tr(FALLBACK_MENUS);
 
   return (
     <footer className="mt-6 bg-[#0B0C0F] text-white/80 md:mt-8">
       {/* Link columns */}
       <div className="w-full px-6 pt-10 pb-8 sm:px-10 md:py-10 lg:px-16 xl:px-24">
         <div className="grid grid-cols-1 gap-x-8 md:grid-cols-5 md:gap-x-10 xl:gap-x-12">
-          {menus.map((menu, i) => (
+          {shownMenus.map((menu, i) => (
             <FooterColumn
               key={menu.label}
               label={menu.label}
@@ -227,33 +218,34 @@ export default function Footer() {
           <div>
             <span className="text-base font-semibold tracking-tight text-white">Devora</span>
             <p className="mt-1.5 max-w-xs text-[12px] leading-relaxed text-white/45">
-              A software studio for teams who'd rather ship than wait.
+              {t("A software studio for teams who'd rather ship than wait.")}
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-[12px] text-white/45 sm:grid-cols-2">
             <div>
-              <p className="mb-1 font-medium text-white/70">Say hello</p>
+              <p className="mb-1 font-medium text-white/70">{t("Say hello")}</p>
               <a
-                href="mailto:hello@devora.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="transition-colors hover:text-[#D9A85C]"
               >
-                hello@devora.com
+                {CONTACT_EMAIL}
               </a>
             </div>
             <div>
-              <p className="mb-1 font-medium text-white/70">Follow along</p>
+              <p className="mb-1 font-medium text-white/70">{t("Follow along")}</p>
               <ul className="flex flex-col gap-1">
                 {SOCIALS.map((s) => {
-                  const isWeb = s.href.startsWith("http");
+                  const href = s.message ? s.href + encodeURIComponent(t(s.message)) : s.href;
+                  const isWeb = href.startsWith("http");
                   return (
                     <li key={s.label}>
                       <a
-                        href={s.href}
+                        href={href}
                         {...(isWeb ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                         className="transition-colors hover:text-[#D9A85C]"
                       >
-                        {s.label}
+                        {t(s.label)}
                       </a>
                     </li>
                   );
@@ -267,16 +259,19 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="flex w-full flex-col gap-2 px-6 py-4 text-[11px] text-white/40 sm:px-10 md:flex-row md:items-center md:justify-between lg:px-16 xl:px-24">
-          <p>© {year} Devora. All Rights Reserved.</p>
+          <p>© {year} Devora. {t("All Rights Reserved.")}</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1.5">
             <Link href="/privacy-policy" className="hover:text-white/70">
-              Privacy Policy
+              {t("Privacy Policy")}
             </Link>
             <Link href="/cookie-policy" className="hover:text-white/70">
-              Cookie Policy
+              {t("Cookie Policy")}
             </Link>
             <Link href="/terms" className="hover:text-white/70">
-              Terms & Conditions
+              {t("Terms & Conditions")}
+            </Link>
+            <Link href="/admin/login" className="hover:text-white/70">
+              {t("Admin")}
             </Link>
           </div>
         </div>

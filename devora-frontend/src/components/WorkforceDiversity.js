@@ -1,9 +1,9 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const container = {
     hidden: {},
@@ -20,7 +20,7 @@ export default function WorkforceDiversity() {
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/workforce-diversity`)
+        apiFetch("workforce-diversity")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();

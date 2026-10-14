@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 
 const sections = [
     {
@@ -89,23 +91,33 @@ const sections = [
         id: "contact-us",
         title: "Contact Us",
         body: [
-            "Questions about this Cookie Policy? Reach out to us at inquiry@devsinc.com.",
+            "Questions about this Cookie Policy? Reach out to us at hello@devora.com.",
         ],
     },
 ];
 
+const LAST_UPDATED = "Last Updated: August 11, 2026";
+
+const intro = [
+    `This Cookie Policy explains how Devora ("Devora", "we", "our", or "us") uses cookies and related technologies when you visit our website and any related pages (collectively, the "Site").`,
+    `This policy works alongside our {privacyPolicy}, which covers how we collect, use, and safeguard personal information more broadly.`,
+];
+
 export default function CookiePolicyContent() {
+    const { t } = useLanguage();
+    const localizedSections = useLocalized(sections);
+
     return (
         <div className="flex min-h-screen flex-col bg-white">
             <Navbar />
 
             {/* Header */}
             <div className="bg-navy px-6 py-14 sm:px-12 lg:px-20">
-                <span className="text-xs font-medium tracking-wide text-teal">LEGAL</span>
+                <span className="text-xs font-medium tracking-wide text-teal">{t("LEGAL")}</span>
                 <h1 className="mt-3 font-heading text-4xl font-semibold text-white sm:text-5xl">
-                    Cookie Policy
+                    {t("Cookie Policy")}
                 </h1>
-                <p className="mt-3 text-sm text-slate">Last Updated: August 11, 2026</p>
+                <p className="mt-3 text-sm text-slate">{t(LAST_UPDATED)}</p>
             </div>
 
             {/* Body */}
@@ -113,9 +125,9 @@ export default function CookiePolicyContent() {
                 {/* Sidebar nav */}
                 <nav className="hidden lg:block">
                     <div className="sticky top-24">
-                        <p className="mb-3 text-xs font-medium tracking-wide text-slate">ON THIS PAGE</p>
+                        <p className="mb-3 text-xs font-medium tracking-wide text-slate">{t("ON THIS PAGE")}</p>
                         <ul className="space-y-2.5 border-l border-black/10 pl-4 text-sm">
-                            {sections.map((s) => (
+                            {localizedSections.map((s) => (
                                 <li key={s.id}>
                                     <a
                                         href={`#${s.id}`}
@@ -132,23 +144,26 @@ export default function CookiePolicyContent() {
                 {/* Content */}
                 <div className="max-w-2xl">
                     <div className="space-y-4 text-sm leading-relaxed text-slate">
-                        <p>
-                            This Cookie Policy explains how Devora ("Devora", "we", "our", or "us") uses
-                            cookies and related technologies when you visit our website and any related
-                            pages (collectively, the "Site").
-                        </p>
-                        <p>
-                            This policy works alongside our{" "}
-                            <a href="/privacy-policy" className="text-teal hover:opacity-80">
-                                Privacy Policy
-                            </a>
-                            , which covers how we collect, use, and safeguard personal information more
-                            broadly.
-                        </p>
+                        {intro.map((paragraph, i) => {
+                            const [before, after] = t(paragraph).split("{privacyPolicy}");
+                            return (
+                                <p key={i}>
+                                    {before}
+                                    {after !== undefined && (
+                                        <>
+                                            <Link href="/privacy-policy" className="text-teal hover:opacity-80">
+                                                {t("Privacy Policy")}
+                                            </Link>
+                                            {after}
+                                        </>
+                                    )}
+                                </p>
+                            );
+                        })}
                     </div>
 
                     <div className="mt-10 space-y-10">
-                        {sections.map((s) => (
+                        {localizedSections.map((s) => (
                             <section key={s.id} id={s.id} className="scroll-mt-24">
                                 <h2 className="font-heading text-xl font-semibold text-ink">{s.title}</h2>
 

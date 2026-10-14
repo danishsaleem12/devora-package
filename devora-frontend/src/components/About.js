@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function ArrowIcon() {
   return (
@@ -96,11 +97,12 @@ function OrbitVisual() {
 }
 
 export default function About() {
+  const { t, te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/about`)
+    apiFetch("about")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -113,7 +115,7 @@ export default function About() {
     return (
       <section className="bg-navy px-6 py-24 text-white">
         <p className="mx-auto max-w-6xl text-sm text-teal">
-          Could not load about page: {error}. Is the backend running on {API_URL}?
+          {te("Could not load about page. Please try again in a moment.", error)}
         </p>
       </section>
     );
@@ -161,7 +163,7 @@ export default function About() {
 
           {data.trustedBy && (
             <div className="mt-10">
-              <p className="text-[11px] font-medium tracking-widest text-slate/50">TRUSTED BY</p>
+              <p className="text-[11px] font-medium tracking-widest text-slate/50">{t("TRUSTED BY")}</p>
               <div className="mt-4 flex flex-wrap gap-3">
                 {data.trustedBy.map((name, i) => (
                   <motion.span

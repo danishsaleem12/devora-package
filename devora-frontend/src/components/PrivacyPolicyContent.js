@@ -1,6 +1,8 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const sections = [
     {
@@ -125,23 +127,35 @@ const sections = [
         id: "contact-information",
         title: "Contact Information",
         body: [
-            "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at inquiry@devsinc.com.",
+            "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at hello@devora.com.",
         ],
     },
 ];
 
+// Intro paragraphs live here (not inline in the JSX) so they can be translated.
+// "{email}" is replaced by the mailto link when rendered.
+const intro = [
+    `The website ("Site") for Devora LLC ("Devora", "We", "Our", "Us" or "Company") was created to provide software development services (the "Services"). The privacy of our Site visitors is important to us, and in order to protect your personal information we have implemented the following Privacy Policy, with provisions that apply to the collection of data by Devora, its subsidiaries, and its affiliates.`,
+    `Our Privacy Policy discloses the type and nature of information we collect and how we use it, as well as the choices you can make about the way your information is collected and used. By exploring and using Devora's Site and Services, and by submitting information to Devora, you signify acceptance of the terms of our Privacy Policy. If you have questions or concerns regarding this statement, you should first contact us at {email}.`,
+];
+
+const LAST_UPDATED = "Last Updated: August 8, 2026";
+
 export default function PrivacyPolicyContent() {
+    const { t } = useLanguage();
+    const localizedSections = useLocalized(sections);
+
     return (
         <div className="flex min-h-screen flex-col bg-white">
             <Navbar />
 
             {/* Header */}
             <div className="bg-navy px-6 py-14 sm:px-12 lg:px-20">
-                <span className="text-xs font-medium tracking-wide text-teal">LEGAL</span>
+                <span className="text-xs font-medium tracking-wide text-teal">{t("LEGAL")}</span>
                 <h1 className="mt-3 font-heading text-4xl font-semibold text-white sm:text-5xl">
-                    Privacy Policy
+                    {t("Privacy Policy")}
                 </h1>
-                <p className="mt-3 text-sm text-slate">Last Updated: August 8, 2026</p>
+                <p className="mt-3 text-sm text-slate">{t(LAST_UPDATED)}</p>
             </div>
 
             {/* Body */}
@@ -149,9 +163,9 @@ export default function PrivacyPolicyContent() {
                 {/* Sidebar nav */}
                 <nav className="hidden lg:block">
                     <div className="sticky top-24">
-                        <p className="mb-3 text-xs font-medium tracking-wide text-slate">ON THIS PAGE</p>
+                        <p className="mb-3 text-xs font-medium tracking-wide text-slate">{t("ON THIS PAGE")}</p>
                         <ul className="space-y-2.5 border-l border-black/10 pl-4 text-sm">
-                            {sections.map((s) => (
+                            {localizedSections.map((s) => (
                                 <li key={s.id}>
                                     <a
                                         href={`#${s.id}`}
@@ -168,30 +182,26 @@ export default function PrivacyPolicyContent() {
                 {/* Content */}
                 <div className="max-w-2xl">
                     <div className="space-y-4 text-sm leading-relaxed text-slate">
-                        <p>
-                            The website ("Site") for Devora LLC ("Devora", "We", "Our", "Us" or "Company")
-                            was created to provide software development services (the "Services"). The
-                            privacy of our Site visitors is important to us, and in order to protect your
-                            personal information we have implemented the following Privacy Policy, with
-                            provisions that apply to the collection of data by Devora, its subsidiaries, and
-                            its affiliates.
-                        </p>
-                        <p>
-                            Our Privacy Policy discloses the type and nature of information we collect and
-                            how we use it, as well as the choices you can make about the way your
-                            information is collected and used. By exploring and using Devora's Site and
-                            Services, and by submitting information to Devora, you signify acceptance of
-                            the terms of our Privacy Policy. If you have questions or concerns regarding
-                            this statement, you should first contact us at{" "}
-                            <a href="mailto:inquiry@devsinc.com" className="text-teal hover:opacity-80">
-                                inquiry@devsinc.com
-                            </a>
-                            .
-                        </p>
+                        {intro.map((paragraph, i) => {
+                            const [before, after] = t(paragraph).split("{email}");
+                            return (
+                                <p key={i}>
+                                    {before}
+                                    {after !== undefined && (
+                                        <>
+                                            <a href={`mailto:${CONTACT_EMAIL}`} className="text-teal hover:opacity-80">
+                                                {CONTACT_EMAIL}
+                                            </a>
+                                            {after}
+                                        </>
+                                    )}
+                                </p>
+                            );
+                        })}
                     </div>
 
                     <div className="mt-10 space-y-10">
-                        {sections.map((s) => (
+                        {localizedSections.map((s) => (
                             <section key={s.id} id={s.id} className="scroll-mt-24">
                                 <h2 className="font-heading text-xl font-semibold text-ink">{s.title}</h2>
 

@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const TONES = {
   teal: { text: "text-teal", bar: "bg-teal" },
@@ -121,11 +122,12 @@ function BadgeChip({ badge, index }) {
 }
 
 export default function Credentials() {
+  const { t, te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/credentials`)
+    apiFetch("credentials")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -137,7 +139,7 @@ export default function Credentials() {
   if (error) {
     return (
       <section className="bg-[#fafafa] p-2 sm:p-3 lg:p-4">
-        <p className="text-sm text-red-500">Could not load credentials: {error}. Is the backend running on {API_URL}?</p>
+        <p className="text-sm text-red-500">{te("Could not load credentials. Please try again in a moment.", error)}</p>
       </section>
     );
   }
@@ -203,7 +205,7 @@ export default function Credentials() {
           </div>
 
           <div className="mt-10 border-t border-white/10 pt-6">
-            <p className="font-mono text-[11px] tracking-widest text-slate/50">RECOGNIZED BY</p>
+            <p className="font-mono text-[11px] tracking-widest text-slate/50">{t("RECOGNIZED BY")}</p>
             <div className="mt-4 flex flex-wrap gap-3">
               {data.badges.map((badge, i) => (
                 <BadgeChip key={badge.name} badge={badge} index={i} />

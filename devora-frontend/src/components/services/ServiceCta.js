@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLocalized } from "@/components/LanguageProvider";
 
 function ArrowIcon() {
     return (
@@ -33,7 +34,9 @@ function AmbientParticles() {
     );
 }
 
-export default function ServiceCta({ service }) {
+export default function ServiceCta({ service: rawService }) {
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.cta;
     if (!data) return null;
 

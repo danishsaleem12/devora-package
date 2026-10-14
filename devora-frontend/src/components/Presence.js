@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 function PinIcon() {
   return (
@@ -81,11 +82,12 @@ function CityCard({ city, index }) {
 }
 
 export default function Presence() {
+  const { te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/presence`)
+    apiFetch("presence")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -98,7 +100,7 @@ export default function Presence() {
     return (
       <section className="bg-white px-6 py-16">
         <p className="mx-auto max-w-6xl text-sm text-red-500">
-          Could not load presence section: {error}. Is the backend running on {API_URL}?
+          {te("Could not load presence section. Please try again in a moment.", error)}
         </p>
       </section>
     );

@@ -1,0 +1,17 @@
+{
+  "Admin Login": "Connexion administrateur",
+  "Sign in to manage job postings.": "Connectez-vous pour gérer les offres d'emploi.",
+  "Username": "Nom d'utilisateur",
+  "Password": "Mot de passe",
+  "Sign in": "Se connecter",
+  "Signing in…": "Connexion en cours…",
+  "Login failed": "Échec de la connexion",
+  "Invalid username or password": "Nom d'utilisateur ou mot de passe invalide",
+  "Missing or invalid token": "Jeton manquant ou invalide",
+  "Invalid or expired token": "Jeton invalide ou expiré",
+  "Invalid job id": "Identifiant d'offre invalide",
+  "Job not found": "Offre introuvable",
+  "Could not load jobs": "Impossible de charger les offres",
+  "Could not load job": "Impossible de charger l'offre",
+  "Could not delete job": "Impossible de supprimer l'offre"
+}

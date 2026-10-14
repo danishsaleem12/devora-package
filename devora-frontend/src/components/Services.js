@@ -2,10 +2,11 @@
 
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const ACCENTS = {
     teal: { text: "text-teal", glow: "from-teal/30", ring: "group-hover:ring-teal/40" },
@@ -62,6 +63,7 @@ const ICONS = {
 };
 
 function ServiceCard({ item, index }) {
+    const { t } = useLanguage();
     const accent = ACCENTS[item.accent] || ACCENTS.teal;
     const Icon = ICONS[item.icon] || ICONS.layers;
     const isLarge = item.size === "large";
@@ -91,7 +93,7 @@ function ServiceCard({ item, index }) {
             <p className="relative mt-2 max-w-md text-sm leading-relaxed text-slate">{item.description}</p>
 
             <div className="relative mt-5 flex items-center gap-1.5 text-xs font-medium text-white/0 transition-all duration-300 group-hover:text-white/70">
-                Learn more
+                {t("Learn more")}
                 <span className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1">
                     <ArrowIcon />
                 </span>
@@ -105,7 +107,7 @@ export default function Services() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/services`)
+        apiFetch("services")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();

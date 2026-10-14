@@ -10,7 +10,7 @@ export const metadata = {
 export default function PrivacyPolicyPage() {
     return (
         <div >
-            <PrivacyPolicyContent />;
+            <PrivacyPolicyContent />
             <ClosingCta />
             <Footer />
         </div>

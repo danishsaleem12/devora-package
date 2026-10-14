@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage, useLocalized } from "@/components/LanguageProvider";
 
 function CheckIcon() {
     return (
@@ -11,6 +12,7 @@ function CheckIcon() {
 }
 
 function ProblemCard({ item, index }) {
+  const { t } = useLanguage();
     return (
         <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -30,7 +32,7 @@ function ProblemCard({ item, index }) {
 
             {item.fix && (
                 <div className="relative mt-6 border-t border-white/10 pt-5">
-                    <p className="font-mono text-[10px] tracking-widest text-teal/80">HOW WE FIX IT</p>
+                    <p className="font-mono text-[10px] tracking-widest text-teal/80">{t("HOW WE FIX IT")}</p>
                     <p className="mt-2 flex items-start gap-2.5 text-sm leading-relaxed text-white/85">
                         <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal/20 text-teal">
                             <CheckIcon />
@@ -43,7 +45,9 @@ function ProblemCard({ item, index }) {
     );
 }
 
-export default function ServiceProblem({ service }) {
+export default function ServiceProblem({ service: rawService }) {
+  // text is translated from the language catalog (falls back to English)
+  const service = useLocalized(rawService);
     const data = service.problem;
     if (!data?.items?.length) return null;
 

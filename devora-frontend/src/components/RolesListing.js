@@ -2,11 +2,20 @@
 
 "use client";
 
+import Link from "next/link";
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const PAGE_SIZE = 4;
+
+// Career stages. The values match the ?stage=... links on the careers page and the "stage" field on jobs.
+const STAGE_OPTIONS = [
+    { value: "graduate", label: "Graduate & Early Career" },
+    { value: "experienced", label: "Experienced Hires" },
+    { value: "leadership", label: "Leadership" },
+];
 
 function SearchIcon() {
     return (
@@ -56,29 +65,33 @@ function FilterSelect({ label, value, options, onChange }) {
 }
 
 export default function RolesListing() {
+    const { t } = useLanguage();
     const [data, setData] = useState(null);
     const [search, setSearch] = useState("");
     const [workplaceType, setWorkplaceType] = useState("");
     const [location, setLocation] = useState("");
     const [department, setDepartment] = useState("");
     const [workType, setWorkType] = useState("");
+    const [stage, setStage] = useState("");
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/jobs`)
+        apiFetch("jobs")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
             })
-            .then((jobs) =>
+            .then((jobs) => {
+                const fromUrl = new URLSearchParams(window.location.search).get("stage");
+                if (STAGE_OPTIONS.some((o) => o.value === fromUrl)) setStage(fromUrl);
                 setData({
                     heading: "Careers at Devora",
                     subheading:
                         "We're building product teams for startups and enterprises worldwide. Here's what we're currently hiring for.",
                     listHeading: "Job Openings",
                     roles: jobs,
-                })
-            )
+                });
+            })
             .catch(() => setData(null));
     }, []);
 
@@ -101,9 +114,10 @@ export default function RolesListing() {
             if (location && r.location !== location) return false;
             if (department && r.department !== department) return false;
             if (workType && r.type !== workType) return false;
+            if (stage && (r.stage || "experienced") !== stage) return false;
             return true;
         });
-    }, [data, search, workplaceType, location, department, workType]);
+    }, [data, search, workplaceType, location, department, workType, stage]);
 
     const activeFilters = [
         workplaceType && { key: "workplaceType", label: workplaceType, clear: () => setWorkplaceType("") },
@@ -112,7 +126,18 @@ export default function RolesListing() {
         workType && { key: "workType", label: workType, clear: () => setWorkType("") },
     ].filter(Boolean);
 
+    // keeps the address bar in sync, so a filtered view can be shared or bookmarked
+    const changeStage = (next) => {
+        setStage(next);
+        setVisibleCount(PAGE_SIZE);
+        const url = new URL(window.location.href);
+        if (next) url.searchParams.set("stage", next);
+        else url.searchParams.delete("stage");
+        window.history.replaceState(null, "", url);
+    };
+
     const clearAll = () => {
+        changeStage("");
         setSearch("");
         setWorkplaceType("");
         setLocation("");
@@ -133,11 +158,11 @@ export default function RolesListing() {
                 <span className="font-heading text-2xl font-bold text-ink">
                     <span className="text-teal">D</span>evora
                 </span>
-                <h1 className="mt-6 font-heading text-3xl font-semibold text-ink sm:text-4xl">{data.heading}</h1>
-                <p className="mt-4 text-sm leading-relaxed text-slate">{data.subheading}</p>
+                <h1 className="mt-6 font-heading text-3xl font-semibold text-ink sm:text-4xl">{t(data.heading)}</h1>
+                <p className="mt-4 text-sm leading-relaxed text-slate">{t(data.subheading)}</p>
             </div>
 
-            <h2 className="mt-16 text-center font-heading text-2xl font-semibold text-ink">{data.listHeading}</h2>
+            <h2 className="mt-16 text-center font-heading text-2xl font-semibold text-ink">{t(data.listHeading)}</h2>
 
             {/* Search + filters */}
             <div className="mx-auto mt-8 max-w-4xl">
@@ -149,16 +174,33 @@ export default function RolesListing() {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search jobs..."
+                        placeholder={t("Search jobs...")}
                         className="w-full rounded-md border border-black/10 py-3 pl-10 pr-4 text-sm text-ink outline-none transition-colors focus:border-teal"
                     />
                 </div>
 
+                <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label={t("Career stage")}>
+                    {[{ value: "", label: "All stages" }, ...STAGE_OPTIONS].map((o) => (
+                        <button
+                            key={o.value || "all"}
+                            type="button"
+                            onClick={() => changeStage(o.value)}
+                            aria-pressed={stage === o.value}
+                            className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                                stage === o.value
+                                    ? "border-navy bg-navy text-white"
+                                    : "border-black/10 text-slate hover:border-black/20 hover:text-ink"
+                            }`}
+                        >
+                            {t(o.label)}
+                        </button>
+                    ))}
+                </div>
                 <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <FilterSelect label="Workplace type" value={workplaceType} options={options.workplaceTypes} onChange={setWorkplaceType} />
-                    <FilterSelect label="Location" value={location} options={options.locations} onChange={setLocation} />
-                    <FilterSelect label="Department" value={department} options={options.departments} onChange={setDepartment} />
-                    <FilterSelect label="Work type" value={workType} options={options.workTypes} onChange={setWorkType} />
+                    <FilterSelect label={t("Workplace type")} value={workplaceType} options={options.workplaceTypes} onChange={setWorkplaceType} />
+                    <FilterSelect label={t("Location")} value={location} options={options.locations} onChange={setLocation} />
+                    <FilterSelect label={t("Department")} value={department} options={options.departments} onChange={setDepartment} />
+                    <FilterSelect label={t("Work type")} value={workType} options={options.workTypes} onChange={setWorkType} />
                 </div>
 
                 {activeFilters.length > 0 && (
@@ -175,7 +217,7 @@ export default function RolesListing() {
                             </span>
                         ))}
                         <button onClick={clearAll} className="ml-auto text-xs font-medium text-teal hover:opacity-80">
-                            Clear filters
+                            {t("Clear filters")}
                         </button>
                     </div>
                 )}
@@ -208,7 +250,7 @@ export default function RolesListing() {
                 </AnimatePresence>
 
                 {filteredRoles.length === 0 && (
-                    <p className="py-10 text-center text-sm text-slate">No roles match those filters right now.</p>
+                    <p className="py-10 text-center text-sm text-slate">{t("No roles match those filters right now.")}</p>
                 )}
             </div>
 
@@ -218,7 +260,7 @@ export default function RolesListing() {
                         onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                         className="rounded-md bg-teal px-6 py-2.5 text-sm font-medium text-navy transition-opacity hover:opacity-90"
                     >
-                        Show more
+                        {t("Show more")}
                     </button>
                 </div>
             )}
@@ -226,11 +268,11 @@ export default function RolesListing() {
             {/* Utility footer row */}
             <div className="mx-auto mt-16 max-w-4xl border-t border-black/10 pt-6 text-center">
                 <div className="flex justify-center gap-6 text-sm">
-                    <a href="/" className="font-medium text-teal hover:opacity-80">View website</a>
-                    <a href="/contact" className="font-medium text-teal hover:opacity-80">Help</a>
+                    <Link href="/" className="font-medium text-teal hover:opacity-80">{t("View website")}</Link>
+                    <Link href="/contact" className="font-medium text-teal hover:opacity-80">{t("Help")}</Link>
                 </div>
                 <p className="mt-4 text-xs text-slate">
-                    Devora Careers · <a href="/privacy" className="hover:text-ink">Privacy</a> · <a href="/accessibility" className="hover:text-ink">Accessibility</a>
+                    {t("Devora Careers")} · <Link href="/privacy-policy" className="hover:text-ink">{t("Privacy")}</Link> · <Link href="/accessibility" className="hover:text-ink">{t("Accessibility")}</Link>
                 </p>
             </div>
         </section>

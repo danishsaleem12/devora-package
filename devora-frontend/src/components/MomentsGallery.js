@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const AUTOPLAY_DELAY = 3500;
 const SCROLL_RESET_DELAY = 450;
 
@@ -34,6 +35,7 @@ const rise = {
 };
 
 export default function MomentsGallery() {
+    const { t } = useLanguage();
     const [data, setData] = useState(null);
     const scrollRef = useRef(null);
     const timerRef = useRef(null);
@@ -42,7 +44,7 @@ export default function MomentsGallery() {
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        fetch(`${API_URL}/api/moments-gallery`)
+        apiFetch("moments-gallery")
             .then((res) => {
                 if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
                 return res.json();
@@ -158,7 +160,7 @@ export default function MomentsGallery() {
                     <button
                         type="button"
                         onClick={handlePrevClick}
-                        aria-label="Previous"
+                        aria-label={t("Previous")}
                         className="absolute left-0 top-1/2 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-ink shadow-md transition-colors hover:bg-black/5"
                     >
                         <ChevronLeftIcon />
@@ -185,7 +187,7 @@ export default function MomentsGallery() {
                     <button
                         type="button"
                         onClick={handleNextClick}
-                        aria-label="Next"
+                        aria-label={t("Next")}
                         className="absolute right-0 top-1/2 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white text-ink shadow-md transition-colors hover:bg-black/5"
                     >
                         <ChevronRightIcon />

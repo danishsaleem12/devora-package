@@ -1,9 +1,10 @@
 "use client";
 
+import { apiFetch } from "@/lib/api";
+import { useLanguage } from "@/components/LanguageProvider";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const TONES = {
   teal: { text: "text-teal", bg: "bg-teal", glow: "bg-teal/15" },
@@ -33,12 +34,13 @@ function initials(name) {
 }
 
 export default function Testimonials() {
+  const { te } = useLanguage();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/testimonials`)
+    apiFetch("testimonials")
       .then((res) => {
         if (!res.ok) throw new Error(`Backend responded with ${res.status}`);
         return res.json();
@@ -51,7 +53,7 @@ export default function Testimonials() {
     return (
       <section className="bg-white p-2 sm:p-3 lg:p-4">
         <p className="text-sm text-red-500">
-          Could not load testimonials: {error}. Is the backend running on {API_URL}?
+          {te("Could not load testimonials. Please try again in a moment.", error)}
         </p>
       </section>
     );
